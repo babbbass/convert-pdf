@@ -6,6 +6,8 @@ import { FileText, Loader2 } from "lucide-react"
 import { PDFDocument } from "pdf-lib"
 import { toast } from "sonner"
 import { reorderedItem } from "@/lib/types"
+import { createWorker } from "tesseract.js"
+import { extractTextFromPdf } from "@/lib/convertPdf"
 
 export default function Home() {
   const [images, setImages] = useState<
@@ -42,7 +44,48 @@ export default function Home() {
     })
   }, [])
 
+  function getAppropriateScale(width: number, height: number) {
+    const screenWidth = window.innerWidth
+    const screenHeight = window.innerHeight
+    const isPortrait = screenHeight > screenWidth
+
+    // for mobile
+    if (screenWidth <= 768) {
+      const scaleFactor = isPortrait
+        ? screenWidth / width / 4
+        : screenHeight / height / 4
+      return Math.min(scaleFactor, 1) // Limit scale to 1 for avoid image overflow
+    }
+    return 1
+  }
+
+  async function extractText(imagePath: string) {
+    const worker = await createWorker("fra")
+    console.log("regonizing", imagePath)
+    const ret = await worker.recognize(imagePath)
+    console.log("grrr", ret.data.text)
+    await worker.terminate()
+    return ret.data.text
+  }
+
+  function classifyDocument(text: string) {
+    const factureKeywords = ["facture", "invoice", "TVA", "montant"]
+    const depenseKeywords = ["ticket", "dépense", "reçu", "note"]
+
+    const isFacture = factureKeywords.some((word) =>
+      text.toLowerCase().includes(word)
+    )
+    const isDepense = depenseKeywords.some((word) =>
+      text.toLowerCase().includes(word)
+    )
+
+    if (isFacture) return "factures"
+    if (isDepense) return "depenses"
+    return "inconnu"
+  }
+
   const generatePDF = async () => {
+    let textToDocument = ""
     if (images.length === 0) {
       toast("Please select at least one image to generate a PDF.")
       return
@@ -51,8 +94,19 @@ export default function Home() {
     setIsGenerating(true)
     try {
       const pdfDoc = await PDFDocument.create()
-
+      // const img = images[0]
+      console.log(images)
+      // return
       for (const image of images) {
+        if (image.file.type === "application/pdf") {
+          textToDocument = await extractTextFromPdf(image.file)
+        } else {
+          textToDocument = await extractText(image.preview)
+        }
+        // const textImage = await extractText(image.preview)
+        const classifyDoc = classifyDocument(textToDocument)
+        console.log("textImage", classifyDoc)
+        return
         const imageBytes = await image.file.arrayBuffer()
         let pageImage
 
@@ -69,7 +123,9 @@ export default function Home() {
 
         const page = pdfDoc.addPage()
         const { width, height } = page.getSize()
-        const scaledDims = pageImage.scale(1)
+        console.log(width, height)
+        const scale = getAppropriateScale(width, height)
+        const scaledDims = pageImage.scale(scale)
 
         page.drawImage(pageImage, {
           x: (width - scaledDims.width) / 2,
