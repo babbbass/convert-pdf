@@ -6,15 +6,13 @@ import { PDFDocument } from "pdf-lib"
 import { toast } from "sonner"
 import { reorderedItem } from "@/lib/types"
 import { SendEmailTrigger } from "@/components/SendEmailTrigger"
-// import { createWorker } from "tesseract.js"
-// import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
+import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
 import { FileText, Loader2 } from "lucide-react"
-// import { extractText } from "@/hooks/useTesseract"
-// import { useTesseract } from "@/hooks/useTesseract"
+import { useTesseract } from "@/hooks/useTesseract"
 // import { storePDF } from "@/lib/storePdf"
 
 export default function Home() {
-  // const worker = useTesseract()
+  const worker = useTesseract()
   const [images, setImages] = useState<
     Array<{ id: string; file: File; preview: string }>
   >([])
@@ -54,16 +52,13 @@ export default function Home() {
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
     const isPortrait = screenHeight > screenWidth
-    //const isPaysage = width > height
 
-    // for mobile
     if (screenWidth <= 768) {
       const scaleFactor = isPortrait
         ? screenWidth / width / 4
         : screenHeight / height / 4
       return Math.min(scaleFactor, 1) // Limit scale to 1 for avoid image overflow
     }
-    //if (isPaysage) return Math.min(width / 4, 1)
 
     return 1
   }
@@ -83,9 +78,12 @@ export default function Home() {
   //   if (isDepense) return "depenses"
   //   return "inconnu"
   // }
-
+  async function extractText(imagePath: string) {
+    const ret = await worker?.recognize(imagePath)
+    return ret?.data.text
+  }
   const generatePDF = async () => {
-    const textToDocument = ""
+    let textOfDocument: string | undefined = ""
     if (images.length === 0) {
       toast("Please select at least one image to generate a PDF.")
       return
@@ -95,12 +93,11 @@ export default function Home() {
     try {
       const pdfDoc = await PDFDocument.create()
       for (const image of images) {
-        // if (image.file.type === "application/pdf") {
-        //   textToDocument = await extractTextFromPdf(image.file)
-        // } else {
-        // textToDocument = await extractText(image.preview)
-        // }
-        // const textImage = await extractText(image.preview)
+        if (image.file.type === "application/pdf") {
+          textOfDocument = await extractTextFromPdf(image.file, worker)
+        } else {
+          textOfDocument = await extractText(image.preview)
+        }
         // const res = await fetch("/api/classifyInvoice", {
         //   method: "POST",
         //   headers: {
@@ -110,7 +107,7 @@ export default function Home() {
         // })
         // const data = await res.json()
         // const classifyDoc = classifyDocument(textToDocument)
-        // console.log("textImage", data)
+        console.log("textImage", textOfDocument)
         //return
         const imageBytes = await image.file.arrayBuffer()
         let pageImage
