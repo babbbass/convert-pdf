@@ -67,14 +67,14 @@ export function Picture({
     <div
       ref={imagesRef}
       data-index={index}
-      className={`glass rounded-lg p-2 flex items-center gap-4 border m-2 ${
+      className={`glass rounded-2xl p-2 flex items-center gap-4 border border-sky-500 m-2 ${
         dragging ? "border-dashed border-2 opacity-30" : ""
       }
         ${isDraggedOver ? "bg-blue-500/30" : ""}`}
       draggable='false'
     >
       <div className='cursor-grab'>
-        <GripVertical className='text-gray-400' />
+        <GripVertical className='text-sky-600' />
       </div>
       <Image
         src={image.preview}
@@ -83,7 +83,9 @@ export function Picture({
         width={64}
         height={64}
       />
-      <span className='flex-1 truncate'>{image.file.name}</span>
+      <span className='flex-1 truncate text-sky-600 font-medium'>
+        {image.file.name}
+      </span>
       <button
         onClick={() => onRemove(image.id)}
         className='p-1 hover:bg-gray-100 rounded-full transition-colors'

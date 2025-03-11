@@ -89,7 +89,10 @@ export function EmailForm() {
   }, [])
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='space-y-6 bg-slate-50'
+      >
         <FormField
           control={form.control}
           name='to'
@@ -97,7 +100,11 @@ export function EmailForm() {
             <FormItem>
               <FormLabel>Destinataire</FormLabel>
               <FormControl>
-                <Input placeholder='email@exemple.com' {...field} />
+                <Input
+                  placeholder='email@exemple.com'
+                  {...field}
+                  className='border-card rounded-xl'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -111,7 +118,11 @@ export function EmailForm() {
             <FormItem>
               <FormLabel>Sujet</FormLabel>
               <FormControl>
-                <Input placeholder="Sujet de l'email" {...field} />
+                <Input
+                  placeholder="Sujet de l'email"
+                  className='border-card rounded-xl'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -127,7 +138,7 @@ export function EmailForm() {
               <FormControl>
                 <Textarea
                   placeholder='Votre message...'
-                  className='min-h-[120px]'
+                  className='min-h-[120px] border-card rounded-xl'
                   {...field}
                 />
               </FormControl>
@@ -149,16 +160,16 @@ export function EmailForm() {
                     accept='.pdf'
                     multiple
                     //onChange={handleFileChange}
-                    className='file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
+                    className='file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm  file:font-semibold file:bg-card file:text-card-foreground hover:file:bg-card/70 border-card rounded-xl'
                   />
 
                   {pdfUrl && (
                     <div className='flex items-center gap-2'>
-                      <FileText className='h-5 w-5 text-green-600' />
+                      <FileText className='h-5 w-5 text-secondary' />
                       <a
                         href={pdfUrl}
                         download
-                        className='text-blue-600 hover:underline'
+                        className='text-secondary font-semibold hover:underline'
                       >
                         Télécharger la facture.pdf
                       </a>
@@ -171,7 +182,11 @@ export function EmailForm() {
           )}
         />
 
-        <Button type='submit' className='w-full' disabled={isLoading}>
+        <Button
+          type='submit'
+          className='w-full bg-card text-card-foreground hover:bg-card/90 cursor-pointer'
+          disabled={isLoading}
+        >
           {isLoading ? (
             <>
               <Loader2 className='mr-2 h-4 w-4 animate-spin' />

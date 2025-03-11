@@ -1,6 +1,7 @@
 import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import { ImageIcon, UploadIcon } from "lucide-react"
+import { Card } from "./ui/card"
 
 interface ImageUploaderProps {
   onImagesSelected: (files: File[]) => void
@@ -24,30 +25,34 @@ export const ImageUploader = ({ onImagesSelected }: ImageUploaderProps) => {
   })
 
   return (
-    <div
+    <Card
       {...getRootProps()}
-      className={`glass p-8 rounded-lg text-center cursor-pointer transition-all duration-200 
+      className={`glass p-8 rounded-xl text-center cursor-pointer transition-all duration-200 
         ${
           isDragActive
-            ? "border-primary border-2"
-            : "border border-dashed border-gray-300"
+            ? "border-slate-50 border-2"
+            : "border border-dashed border-slate-50"
         }
-        hover:border-primary hover:border-solid`}
+        hover:border-slate-50 hover:border-solid bg-card`}
     >
       <input {...getInputProps()} />
       <div className='flex flex-col items-center gap-4'>
         {isDragActive ? (
           <ImageIcon className='w-12 h-12 text-primary animate-bounce' />
         ) : (
-          <UploadIcon className='w-12 h-12 text-gray-400' />
+          <UploadIcon className='w-12 h-12 text-card-foreground' />
         )}
         <div>
           <p className='text-lg font-medium'>
-            {isDragActive ? "Drop images here" : "Drag & drop images here"}
+            {isDragActive
+              ? "Déposez les images ici"
+              : "Glissez et déposez les images ici"}
           </p>
-          <p className='text-sm text-gray-500 mt-1'>or click to select files</p>
+          <p className='text-sm text-card-foreground mt-1'>
+            ou cliquez pour sélectionner les fichiers
+          </p>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

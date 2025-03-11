@@ -175,14 +175,15 @@ export default function Home() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-white to-gray-50 px-4 py-8'>
+    <div className='bg-gradient-to-b from-white to-gray-50 px-4 py-8 flex-1'>
       <div className='max-w-4xl mx-auto space-y-8'>
         <div className='text-center space-y-4'>
-          <h1 className='text-4xl font-bold tracking-tight'>
-            Photo PDF Convert
+          <h1 className='text-4xl font-bold tracking-tight text-primary'>
+            Envoyez vos documents
           </h1>
-          <p className='text-lg text-gray-600'>
-            Convert your photos into a beautiful PDF document in seconds
+          <p className='text-lg text-sky-500'>
+            Convertissez vos photos en document PDF et envoyez les en quelques
+            secondes
           </p>
         </div>
         <ImageUploader onImagesSelected={handleImagesSelected} />
@@ -194,14 +195,14 @@ export default function Home() {
           />
 
           {images.length > 0 && (
-            <>
+            <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
               <button
                 onClick={generatePDF}
                 disabled={isGenerating}
-                className='glass w-full py-4 rounded-lg font-medium text-primary 
-                hover:bg-slate-300 hover:text-slate-900 transition-all duration-200
+                className='glass w-3/4 py-4 rounded-2xl font-medium text-card-foreground 
+                hover:bg-sky-500 transition-all duration-300
                 disabled:opacity-50 disabled:cursor-not-allowed
-                flex items-center justify-center gap-2 bg-primary text-white cursor-pointer'
+                flex items-center justify-center gap-2 bg-sky-400 cursor-pointer'
               >
                 {isGenerating ? (
                   <>
@@ -220,7 +221,7 @@ export default function Home() {
                   <SendEmailTrigger />
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

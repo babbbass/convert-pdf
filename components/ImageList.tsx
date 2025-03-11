@@ -10,7 +10,7 @@ export const ImageList = ({ images, onReorder, onRemove }: ImageListProps) => {
   if (images.length === 0) return null
   return (
     <div
-      className={`space-y-2 py-2 border border-gray-300 rounded-md cursor-grab`}
+      className={`space-y-2 p-4 border-2 border-purple-500/30 rounded-2xl cursor-grab`}
     >
       {images.map((image, index) => (
         <div data-index={index} key={image.id}>
