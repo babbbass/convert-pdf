@@ -9,9 +9,11 @@ import { SendEmailTrigger } from "@/components/SendEmailTrigger"
 import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
 import { FileText, Loader2 } from "lucide-react"
 import { useTesseract } from "@/hooks/useTesseract"
-// import { storePDF } from "@/lib/storePdf"
+import { formatDateOfDay } from "@/lib/date"
+import { useGlobalStore } from "@/stores/globalStore"
 
 export default function Home() {
+  const { setDocumentName } = useGlobalStore()
   const worker = useTesseract()
   const [images, setImages] = useState<
     Array<{ id: string; file: File; preview: string }>
@@ -79,7 +81,11 @@ export default function Home() {
   //   return "inconnu"
   // }
   async function extractText(imagePath: string) {
+    if (!imagePath || typeof imagePath !== "string") {
+      return
+    }
     const ret = await worker?.recognize(imagePath)
+    await worker?.terminate()
     return ret?.data.text
   }
   const generatePDF = async () => {
@@ -93,7 +99,7 @@ export default function Home() {
     try {
       const pdfDoc = await PDFDocument.create()
       for (const image of images) {
-        if (image.file.type === "application/pdf") {
+        if (image.file.type === "application/pdf" && worker) {
           textOfDocument = await extractTextFromPdf(image.file, worker)
         } else {
           textOfDocument = await extractText(image.preview)
@@ -108,7 +114,6 @@ export default function Home() {
         // const data = await res.json()
         // const classifyDoc = classifyDocument(textToDocument)
         console.log("textImage", textOfDocument)
-        //return
         const imageBytes = await image.file.arrayBuffer()
         let pageImage
         // if image
@@ -140,12 +145,24 @@ export default function Home() {
 
       const pdfBytes = await pdfDoc.save()
       const blob = new Blob([pdfBytes], { type: "application/pdf" })
+      const date = formatDateOfDay()
+      setDocumentName(`${date}.pdf`)
+      const file = new File([pdfBytes], `${date}.pdf`, {
+        type: "application/pdf",
+      })
       const url = URL.createObjectURL(blob)
 
       const link = document.createElement("a")
       link.href = url
       link.download = "document.pdf"
       // link.click()
+      const formData = new FormData()
+      formData.append("file", file)
+      formData.append("classification", "1")
+      await fetch("/api/stockFile", {
+        method: "POST",
+        body: formData,
+      })
       //storePDF(pdfDoc, "test", data.classification)
       setIsGenerated(true)
       toast("Your PDF has been generated and downloaded.")
@@ -168,9 +185,7 @@ export default function Home() {
             Convert your photos into a beautiful PDF document in seconds
           </p>
         </div>
-
         <ImageUploader onImagesSelected={handleImagesSelected} />
-
         <div className='space-y-4'>
           <ImageList
             images={images}

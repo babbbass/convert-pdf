@@ -1,14 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Loader2, Send } from "lucide-react"
+import { Loader2, Send, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-// import { useToast } from '@/hooks/use-toast';
 import { toast } from "sonner"
 import {
   Form,
@@ -18,7 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-
+import { FACTURE_CLIENT } from "@/lib/constants"
+import { useGlobalStore } from "@/stores/globalStore"
 const formSchema = z.object({
   to: z.string().email("Email invalide"),
   subject: z.string().min(1, "Le sujet est requis"),
@@ -28,6 +28,9 @@ const formSchema = z.object({
 
 export function EmailForm() {
   const [isLoading, setIsLoading] = useState(false)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const { documentName } = useGlobalStore()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,12 +48,13 @@ export function EmailForm() {
       formData.append("subject", values.subject)
       formData.append("message", values.message)
 
-      const fileInput =
-        document.querySelector<HTMLInputElement>('input[type="file"]')
-      if (fileInput?.files) {
-        Array.from(fileInput.files).forEach((file) => {
-          formData.append("files", file)
+      if (pdfUrl) {
+        const response = await fetch(pdfUrl)
+        const blob = await response.blob()
+        const file = new File([blob], "facture.pdf", {
+          type: "application/pdf",
         })
+        formData.append("files", file)
       }
 
       const response = await fetch("/api/send-email", {
@@ -62,26 +66,27 @@ export function EmailForm() {
         throw new Error("Erreur lors de l'envoi de l'email")
       }
 
-      toast({
-        title: "Succès",
-        description: "Email envoyé avec succès",
-      })
+      toast("Email envoyé avec succès")
 
       form.reset()
-      if (fileInput) {
-        fileInput.value = ""
-      }
+      // if (fileInput) {
+      //   fileInput.value = ""
+      // }
     } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible d'envoyer l'email",
-        variant: "destructive",
-      })
+      toast("Impossible d'envoyer l'email")
+      console.error(error)
     } finally {
       setIsLoading(false)
     }
   }
+  useEffect(() => {
+    const fetchPdf = async () => {
+      const generatedPdfUrl = `/${FACTURE_CLIENT}/${documentName}`
+      setPdfUrl(generatedPdfUrl)
+    }
 
+    fetchPdf()
+  }, [])
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
@@ -138,12 +143,28 @@ export function EmailForm() {
             <FormItem>
               <FormLabel>Pièces jointes (PDF uniquement)</FormLabel>
               <FormControl>
-                <Input
-                  type='file'
-                  accept='.pdf'
-                  multiple
-                  className='file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
-                />
+                <div>
+                  <Input
+                    type='file'
+                    accept='.pdf'
+                    multiple
+                    //onChange={handleFileChange}
+                    className='file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90'
+                  />
+
+                  {pdfUrl && (
+                    <div className='flex items-center gap-2'>
+                      <FileText className='h-5 w-5 text-green-600' />
+                      <a
+                        href={pdfUrl}
+                        download
+                        className='text-blue-600 hover:underline'
+                      >
+                        Télécharger la facture.pdf
+                      </a>
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -159,7 +180,7 @@ export function EmailForm() {
           ) : (
             <>
               <Send className='mr-2 h-4 w-4' />
-              Envoyer l'email
+              {`Envoyer l'email`}
             </>
           )}
         </Button>
