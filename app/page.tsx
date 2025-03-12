@@ -12,9 +12,10 @@ import { useTesseract } from "@/hooks/useTesseract"
 import { formatDateOfDay } from "@/lib/date"
 import { useGlobalStore } from "@/stores/globalStore"
 import { storeDocument } from "@/lib/storeDocument"
+import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
 
 export default function Home() {
-  const { setDocumentName } = useGlobalStore()
+  const { setDocument } = useGlobalStore()
   const worker = useTesseract()
   const [images, setImages] = useState<
     Array<{ id: string; file: File; preview: string }>
@@ -66,21 +67,18 @@ export default function Home() {
     return 1
   }
 
-  // function classifyDocument(text: string) {
-  //   const factureKeywords = ["facture", "invoice", "TVA", "montant"]
-  //   const depenseKeywords = ["ticket", "dépense", "reçu", "note"]
+  async function classifyDocument(textOfDocument: string) {
+    const res = await fetch("/api/classifyInvoice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: textOfDocument }),
+    })
 
-  //   const isFacture = factureKeywords.some((word) =>
-  //     text.toLowerCase().includes(word)
-  //   )
-  //   const isDepense = depenseKeywords.some((word) =>
-  //     text.toLowerCase().includes(word)
-  //   )
-
-  //   if (isFacture) return "factures"
-  //   if (isDepense) return "depenses"
-  //   return "inconnu"
-  // }
+    const data = await res.json()
+    return data
+  }
   async function extractText(imagePath: string) {
     if (!imagePath || typeof imagePath !== "string") {
       return
@@ -90,10 +88,13 @@ export default function Home() {
     return ret?.data.text
   }
 
-  function generateNameDocument() {
+  function generateNameDocument(classification: number) {
     const date = formatDateOfDay()
     const documentName = `${date}.pdf`
-    setDocumentName(documentName)
+    setDocument({
+      name: documentName,
+      type: classification === 1 ? INVOICE_CUSTOMER : COSTS,
+    })
 
     return documentName
   }
@@ -110,11 +111,14 @@ export default function Home() {
         "Une erreur lors de la lecture de votre Document. Veuillez réessayer."
       )
     }
-    console.log("textImage", textOfDocument)
-    const documentName = generateNameDocument()
-    await storeDocument(document, documentName)
+
+    const { classification } = await classifyDocument(textOfDocument)
+    //console.log(classification)
+    const documentName = generateNameDocument(Number(classification))
+    await storeDocument(document, documentName, classification)
     setIsGenerated(true)
   }
+
   const handleFiles = async () => {
     let textOfDocument: string | undefined = ""
     if (images.length === 0) {
@@ -133,15 +137,7 @@ export default function Home() {
         } else {
           textOfDocument = await extractText(image.preview)
         }
-        // const res = await fetch("/api/classifyInvoice", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ text: textToDocument }),
-        // })
-        // const data = await res.json()
-        // const classifyDoc = classifyDocument(textToDocument)
+
         console.log("textImage", textOfDocument)
         const imageBytes = await image.file.arrayBuffer()
         let pageImage

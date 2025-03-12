@@ -1,3 +1,6 @@
-const FACTURE_CLIENT = "Facture_Client"
-const FRAIS = "Frais"
-export { FACTURE_CLIENT, FRAIS }
+const INVOICE_CUSTOMER = "Facture_Client"
+const COSTS = "Frais"
+const NUMERISATION_COSTS = 0
+const NUMERISATION_INVOICES = 1
+
+export { INVOICE_CUSTOMER, COSTS, NUMERISATION_COSTS, NUMERISATION_INVOICES }

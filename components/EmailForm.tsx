@@ -17,7 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { FACTURE_CLIENT } from "@/lib/constants"
+import { INVOICE_CUSTOMER } from "@/lib/constants"
+
 import { useGlobalStore } from "@/stores/globalStore"
 const formSchema = z.object({
   to: z.string().email("Email invalide"),
@@ -29,14 +30,20 @@ const formSchema = z.object({
 export function EmailForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
-  const { documentName } = useGlobalStore()
+  const { document } = useGlobalStore()
+  // const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       to: "",
-      subject: "",
-      message: "",
+      subject:
+        document?.type === INVOICE_CUSTOMER
+          ? "facture client"
+          : "note de frais",
+      message: `Bonjour, Veuillez trouver en pièce jointe une ${
+        document?.type === INVOICE_CUSTOMER ? "facture client" : "note de frais"
+      }`,
     },
   })
 
@@ -47,6 +54,8 @@ export function EmailForm() {
       formData.append("to", values.to)
       formData.append("subject", values.subject)
       formData.append("message", values.message)
+      // formData.append("files", selectedFiles)
+      // console.log(typeof selectedFiles)
 
       if (pdfUrl) {
         const response = await fetch(pdfUrl)
@@ -54,9 +63,11 @@ export function EmailForm() {
         const file = new File([blob], "facture.pdf", {
           type: "application/pdf",
         })
+        // console.log(typeof file, file)
         formData.append("files", file)
       }
-
+      // console.log(formData.get("files"), formData.get("to"))
+      // return
       const response = await fetch("/api/send-email", {
         method: "POST",
         body: formData,
@@ -79,9 +90,16 @@ export function EmailForm() {
       setIsLoading(false)
     }
   }
+
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files.length > 0) {
+  //     const newFiles = Array.from(event.target.files)
+  //     setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles])
+  //   }
+  // }
   useEffect(() => {
     const fetchPdf = async () => {
-      const generatedPdfUrl = `/${FACTURE_CLIENT}/${documentName}`
+      const generatedPdfUrl = `/${document?.type}/${document?.name}`
       setPdfUrl(generatedPdfUrl)
     }
 
@@ -106,7 +124,7 @@ export function EmailForm() {
                   className='border-card rounded-xl'
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className='text-red-700 font-medium italic' />
             </FormItem>
           )}
         />
@@ -124,7 +142,7 @@ export function EmailForm() {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className='text-red-700 font-medium italic' />
             </FormItem>
           )}
         />
@@ -142,7 +160,7 @@ export function EmailForm() {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className='text-red-700 font-medium italic' />
             </FormItem>
           )}
         />
@@ -155,29 +173,29 @@ export function EmailForm() {
               <FormLabel>Pièces jointes (PDF uniquement)</FormLabel>
               <FormControl>
                 <div>
-                  <Input
+                  {/* <Input
                     type='file'
                     accept='.pdf'
                     multiple
                     //onChange={handleFileChange}
                     className='file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm  file:font-semibold file:bg-card file:text-card-foreground hover:file:bg-card/70 border-card rounded-xl'
-                  />
+                  /> */}
 
                   {pdfUrl && (
                     <div className='flex items-center gap-2'>
-                      <FileText className='h-5 w-5 text-secondary' />
+                      <FileText className='h-5 w-5 text-red-600' />
                       <a
                         href={pdfUrl}
                         download
                         className='text-secondary font-semibold hover:underline'
                       >
-                        Télécharger la facture.pdf
+                        Télécharger le document PDF
                       </a>
                     </div>
                   )}
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage className='text-red-700 font-medium italic' />
             </FormItem>
           )}
         />

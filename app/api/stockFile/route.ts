@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { FACTURE_CLIENT, FRAIS } from "@/lib/constants"
+import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     // Définir le chemin du dossier
     const baseDir = path.join(process.cwd(), "public")
-    const targetFolder = classification === "1" ? FACTURE_CLIENT : FRAIS
+    const targetFolder = Number(classification) === 1 ? INVOICE_CUSTOMER : COSTS
     const targetPath = path.join(baseDir, targetFolder)
 
     // Vérifier et créer le dossier si besoin

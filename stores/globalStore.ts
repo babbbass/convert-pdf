@@ -1,10 +1,17 @@
 import { create } from "zustand"
+import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
 
 type GlobalStore = {
-  documentName: string
-  setDocumentName: (documentName: string) => void
+  document: {
+    name: string
+    type: typeof COSTS | typeof INVOICE_CUSTOMER
+  } | null
+  setDocument: (document: {
+    name: string
+    type: typeof COSTS | typeof INVOICE_CUSTOMER
+  }) => void
 }
 export const useGlobalStore = create<GlobalStore>((set) => ({
-  documentName: "",
-  setDocumentName: (documentName) => set({ documentName }),
+  document: null,
+  setDocument: (document) => set({ document }),
 }))
