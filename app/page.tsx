@@ -11,6 +11,7 @@ import { FileText, Loader2 } from "lucide-react"
 import { useTesseract } from "@/hooks/useTesseract"
 import { formatDateOfDay } from "@/lib/date"
 import { useGlobalStore } from "@/stores/globalStore"
+import { storeDocument } from "@/lib/storeDocument"
 
 export default function Home() {
   const { setDocumentName } = useGlobalStore()
@@ -88,7 +89,33 @@ export default function Home() {
     await worker?.terminate()
     return ret?.data.text
   }
-  const generatePDF = async () => {
+
+  function generateNameDocument() {
+    const date = formatDateOfDay()
+    const documentName = `${date}.pdf`
+    setDocumentName(documentName)
+
+    return documentName
+  }
+  async function handlePdf(document: File) {
+    let textOfDocument: string | undefined = ""
+    try {
+      if (!worker) {
+        throw new Error("OCR not initialized")
+      }
+      textOfDocument = await extractTextFromPdf(document, worker)
+    } catch (error) {
+      console.error(error)
+      toast(
+        "Une erreur lors de la lecture de votre Document. Veuillez réessayer."
+      )
+    }
+    console.log("textImage", textOfDocument)
+    const documentName = generateNameDocument()
+    await storeDocument(document, documentName)
+    setIsGenerated(true)
+  }
+  const handleFiles = async () => {
     let textOfDocument: string | undefined = ""
     if (images.length === 0) {
       toast("Please select at least one image to generate a PDF.")
@@ -100,7 +127,9 @@ export default function Home() {
       const pdfDoc = await PDFDocument.create()
       for (const image of images) {
         if (image.file.type === "application/pdf" && worker) {
-          textOfDocument = await extractTextFromPdf(image.file, worker)
+          //textOfDocument = await extractTextFromPdf(image.file, worker)
+          handlePdf(image.file)
+          return
         } else {
           textOfDocument = await extractText(image.preview)
         }
@@ -145,25 +174,15 @@ export default function Home() {
 
       const pdfBytes = await pdfDoc.save()
       const blob = new Blob([pdfBytes], { type: "application/pdf" })
-      const date = formatDateOfDay()
-      setDocumentName(`${date}.pdf`)
-      const file = new File([pdfBytes], `${date}.pdf`, {
-        type: "application/pdf",
-      })
+      const documentName = generateNameDocument()
+
       const url = URL.createObjectURL(blob)
 
       const link = document.createElement("a")
       link.href = url
       link.download = "document.pdf"
       // link.click()
-      const formData = new FormData()
-      formData.append("file", file)
-      formData.append("classification", "1")
-      await fetch("/api/stockFile", {
-        method: "POST",
-        body: formData,
-      })
-      //storePDF(pdfDoc, "test", data.classification)
+      await storeDocument(pdfBytes, documentName)
       setIsGenerated(true)
       toast("Your PDF has been generated and downloaded.")
     } catch (error) {
@@ -197,7 +216,7 @@ export default function Home() {
           {images.length > 0 && (
             <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
               <button
-                onClick={generatePDF}
+                onClick={handleFiles}
                 disabled={isGenerating}
                 className='glass w-3/4 py-4 rounded-2xl font-medium text-card-foreground 
                 hover:bg-sky-500 transition-all duration-300

@@ -5,7 +5,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 export async function extractTextFromPdf(
   pdfFile: File | ArrayBuffer,
-  worker: Worker | null,
+  worker: Worker,
   options: {
     language?: string
     pageRange?: { start: number; end?: number }
