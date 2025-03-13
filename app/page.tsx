@@ -1,5 +1,5 @@
 "use client"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { ImageUploader } from "@/components/ImageUploader"
 import { ImageList } from "@/components/ImageList"
 import { PDFDocument } from "pdf-lib"
@@ -22,7 +22,6 @@ export default function Home() {
   >([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
-
   const handleImagesSelected = useCallback((files: File[]) => {
     const newImages = files.map((file) => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -30,6 +29,7 @@ export default function Home() {
       preview: URL.createObjectURL(file),
     }))
     setImages((prev) => [...prev, ...newImages])
+    setIsGenerated(false)
   }, [])
 
   const handleReorder = useCallback(
@@ -83,6 +83,7 @@ export default function Home() {
     if (!imagePath || typeof imagePath !== "string") {
       return
     }
+
     const ret = await worker?.recognize(imagePath)
     await worker?.terminate()
     return ret?.data.text
@@ -112,15 +113,52 @@ export default function Home() {
       )
     }
 
-    const { classification } = await classifyDocument(textOfDocument)
-    //console.log(classification)
+    //const { classification } = await classifyDocument(textOfDocument)
+    const classification = "1"
     const documentName = generateNameDocument(Number(classification))
     await storeDocument(document, documentName, classification)
     setIsGenerated(true)
   }
 
+  async function handleImage(
+    image: {
+      id: string
+      file: File
+      preview: string
+    },
+    pdfDoc: PDFDocument
+  ) {
+    const imageBytes = await image.file.arrayBuffer()
+    // const pdfDoc = await PDFDocument.create()
+    let pageImage
+
+    if (image.file.type === "image/jpeg" || image.file.type === "image/jpg") {
+      pageImage = await pdfDoc.embedJpg(imageBytes)
+    } else if (image.file.type === "image/png") {
+      pageImage = await pdfDoc.embedPng(imageBytes)
+    } else {
+      return
+    }
+
+    const page = pdfDoc.addPage()
+    const { width, height } = page.getSize()
+
+    const scale = getAppropriateScale(width, height)
+    const scaledDims = pageImage.scale(scale)
+    // console.log("scaledDims", scaledDims)
+
+    page.drawImage(pageImage, {
+      x: (width - scaledDims.width) / 2,
+      y: (height - scaledDims.height) / 2,
+      width: scaledDims.width,
+      height: scaledDims.height,
+    })
+
+    return page
+  }
+
   const handleFiles = async () => {
-    let textOfDocument: string | undefined = ""
+    let textOfDocument = ""
     if (images.length === 0) {
       toast("Please select at least one image to generate a PDF.")
       return
@@ -130,47 +168,22 @@ export default function Home() {
     try {
       const pdfDoc = await PDFDocument.create()
       for (const image of images) {
+        //PDF
         if (image.file.type === "application/pdf" && worker) {
-          //textOfDocument = await extractTextFromPdf(image.file, worker)
           handlePdf(image.file)
           return
         } else {
           textOfDocument = await extractText(image.preview)
+          console.log("textImage", textOfDocument)
+          await handleImage(image, pdfDoc)
         }
-
-        console.log("textImage", textOfDocument)
-        const imageBytes = await image.file.arrayBuffer()
-        let pageImage
-        // if image
-        if (
-          image.file.type === "image/jpeg" ||
-          image.file.type === "image/jpg"
-        ) {
-          pageImage = await pdfDoc.embedJpg(imageBytes)
-        } else if (image.file.type === "image/png") {
-          pageImage = await pdfDoc.embedPng(imageBytes)
-        } else {
-          continue
-        }
-
-        const page = pdfDoc.addPage()
-        const { width, height } = page.getSize()
-
-        const scale = getAppropriateScale(width, height)
-        const scaledDims = pageImage.scale(scale)
-        console.log("scaledDims", scaledDims)
-
-        page.drawImage(pageImage, {
-          x: (width - scaledDims.width) / 2,
-          y: (height - scaledDims.height) / 2,
-          width: scaledDims.width,
-          height: scaledDims.height,
-        })
       }
 
       const pdfBytes = await pdfDoc.save()
       const blob = new Blob([pdfBytes], { type: "application/pdf" })
-      const documentName = generateNameDocument()
+      // const { classification } = await classifyDocument(textOfDocument)
+      const classification = "1"
+      const documentName = generateNameDocument(Number(classification))
 
       const url = URL.createObjectURL(blob)
 
@@ -178,7 +191,7 @@ export default function Home() {
       link.href = url
       link.download = "document.pdf"
       // link.click()
-      await storeDocument(pdfBytes, documentName)
+      await storeDocument(pdfBytes, documentName, classification)
       setIsGenerated(true)
       toast("Your PDF has been generated and downloaded.")
     } catch (error) {
@@ -188,6 +201,12 @@ export default function Home() {
       setIsGenerating(false)
     }
   }
+
+  useEffect(() => {
+    if (images.length < 1) {
+      setIsGenerated(false)
+    }
+  }, [images.length])
 
   return (
     <div className='bg-gradient-to-b from-white to-gray-50 px-4 py-8 flex-1'>
@@ -211,30 +230,31 @@ export default function Home() {
 
           {images.length > 0 && (
             <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
-              <button
-                onClick={handleFiles}
-                disabled={isGenerating}
-                className='glass w-3/4 py-4 rounded-2xl font-medium text-card-foreground 
+              {isGenerated ? (
+                <div className='flex justify-center w-3/4'>
+                  <SendEmailTrigger />
+                </div>
+              ) : (
+                <button
+                  onClick={handleFiles}
+                  disabled={isGenerating}
+                  className='w-3/4 py-4 rounded-2xl font-medium text-card-foreground 
                 hover:bg-sky-500 transition-all duration-300
                 disabled:opacity-50 disabled:cursor-not-allowed
                 flex items-center justify-center gap-2 bg-sky-400 cursor-pointer'
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className='w-5 h-5 animate-spin' />
-                    PDF en création...
-                  </>
-                ) : (
-                  <>
-                    <FileText className='w-5 h-5' />
-                    Generer le PDF
-                  </>
-                )}
-              </button>
-              {isGenerated && (
-                <div className='flex justify-end'>
-                  <SendEmailTrigger />
-                </div>
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className='w-5 h-5 animate-spin' />
+                      PDF en création...
+                    </>
+                  ) : (
+                    <>
+                      <FileText className='w-5 h-5' />
+                      Generer le PDF
+                    </>
+                  )}
+                </button>
               )}
             </div>
           )}
