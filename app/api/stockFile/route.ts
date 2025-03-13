@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData()
     const file = formData.get("file") as File
     const classification = formData.get("classification") as string
-    console.log("classification", classification, file)
 
     if (!file) {
       return NextResponse.json(

@@ -25,8 +25,8 @@ export function Footer() {
           </Link>
         </div>
       </section>
-      <section className='text-sm md:text-base'>
-        © 2024-2025 PDF Technologies, Inc., a KDAN Company. All Rights Reserved.
+      <section className='text-sm md:text-base text-primary'>
+        ©2025 PDF Technologies, Inc., pixeloft Company. Tous drois réservés.
       </section>
     </footer>
   )

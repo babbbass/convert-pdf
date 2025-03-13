@@ -4,7 +4,7 @@ import { Worker } from "tesseract.js"
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
 
 export async function extractTextFromPdf(
-  pdfFile: File | ArrayBuffer,
+  pdfFile: File | ArrayBuffer | Uint8Array<ArrayBufferLike> | Buffer,
   worker: Worker,
   options: {
     language?: string

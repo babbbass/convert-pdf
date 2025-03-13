@@ -12,7 +12,7 @@ import { useTesseract } from "@/hooks/useTesseract"
 import { formatDateOfDay } from "@/lib/date"
 import { useGlobalStore } from "@/stores/globalStore"
 import { storeDocument } from "@/lib/storeDocument"
-import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
+import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 
 export default function Home() {
   const { setDocument } = useGlobalStore()
@@ -58,57 +58,59 @@ export default function Home() {
   function getAppropriateScale(width: number, height: number) {
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
-    const isPortrait = screenHeight > screenWidth
+    const isPortrait = 0 //screenHeight > screenWidth
 
-    if (screenWidth <= 768) {
-      const scaleFactor = isPortrait
-        ? screenWidth / width / 4
-        : screenHeight / height / 4
-      return Math.min(scaleFactor, 1) // Limit scale to 1 for avoid image overflow
-    }
-
-    return 1
+    const scaleFactor = isPortrait
+      ? screenWidth / width / 4
+      : screenHeight / height / 4
+    return Math.min(scaleFactor, 1)
   }
 
-  async function classifyDocument(textOfDocument: string) {
-    const res = await fetch("/api/classifyInvoice", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: textOfDocument }),
-    })
+  // async function classifyDocument(textOfDocument: string) {
+  //   const res = await fetch("/api/classifyInvoice", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ text: textOfDocument }),
+  //   })
 
-    const data = await res.json()
-    return data
-  }
-  async function extractText(imagePath: string) {
-    if (!imagePath || typeof imagePath !== "string") {
-      return
-    }
+  //   const data = await res.json()
+  //   return data
+  // }
+  // async function extractText(imagePath: string) {
+  //   if (!imagePath || typeof imagePath !== "string") {
+  //     return
+  //   }
 
-    const ret = await worker?.recognize(imagePath)
-    await worker?.terminate()
-    return ret?.data.text
-  }
+  //   const ret = await worker?.recognize(imagePath)
+  //   await worker?.terminate()
+  //   return ret?.data.text
+  // }
 
   function generateNameDocument(classification: number) {
     const date = formatDateOfDay()
     const documentName = `${date}.pdf`
     setDocument({
       name: documentName,
-      type: classification === 1 ? INVOICE_CUSTOMER : COSTS,
+      type:
+        classification === 1
+          ? INVOICE_CUSTOMER
+          : classification === 0
+          ? COSTS
+          : ACCOUNTANT,
     })
 
     return documentName
   }
-  async function handlePdf(document: File) {
+  async function handlePdf(document: File | Uint8Array<ArrayBufferLike>) {
     let textOfDocument: string | undefined = ""
     try {
       if (!worker) {
         throw new Error("OCR not initialized")
       }
       textOfDocument = await extractTextFromPdf(document, worker)
+      console.log(textOfDocument)
     } catch (error) {
       console.error(error)
       toast(
@@ -117,7 +119,7 @@ export default function Home() {
     }
 
     //const { classification } = await classifyDocument(textOfDocument)
-    const classification = "1"
+    const classification = "2"
     const documentName = generateNameDocument(Number(classification))
     await storeDocument(document, documentName, classification)
     setIsGenerated(true)
@@ -132,9 +134,17 @@ export default function Home() {
     pdfDoc: PDFDocument
   ) {
     const imageBytes = await image.file.arrayBuffer()
-    // const pdfDoc = await PDFDocument.create()
-    let pageImage
+    if (image.file.type === "application/pdf") {
+      const externalPdf = await PDFDocument.load(imageBytes)
+      const copiedPages = await pdfDoc.copyPages(
+        externalPdf,
+        externalPdf.getPageIndices()
+      )
+      copiedPages.forEach((page) => pdfDoc.addPage(page))
+      return
+    }
 
+    let pageImage
     if (image.file.type === "image/jpeg" || image.file.type === "image/jpg") {
       pageImage = await pdfDoc.embedJpg(imageBytes)
     } else if (image.file.type === "image/png") {
@@ -145,10 +155,9 @@ export default function Home() {
 
     const page = pdfDoc.addPage()
     const { width, height } = page.getSize()
-
     const scale = getAppropriateScale(width, height)
+
     const scaledDims = pageImage.scale(scale)
-    // console.log("scaledDims", scaledDims)
 
     page.drawImage(pageImage, {
       x: (width - scaledDims.width) / 2,
@@ -161,41 +170,23 @@ export default function Home() {
   }
 
   const handleFiles = async () => {
-    let textOfDocument = ""
     if (images.length === 0) {
       toast("Please select at least one image to generate a PDF.")
       return
     }
-
     setIsGenerating(true)
     try {
       const pdfDoc = await PDFDocument.create()
       for (const image of images) {
-        //PDF
-        if (image.file.type === "application/pdf" && worker) {
-          handlePdf(image.file)
-          return
-        } else {
-          textOfDocument = await extractText(image.preview)
-          console.log("textImage", textOfDocument)
-          await handleImage(image, pdfDoc)
-        }
+        await handleImage(image, pdfDoc)
       }
 
       const pdfBytes = await pdfDoc.save()
-      const blob = new Blob([pdfBytes], { type: "application/pdf" })
-      // const { classification } = await classifyDocument(textOfDocument)
-      const classification = "1"
-      const documentName = generateNameDocument(Number(classification))
+      const file = new File([pdfBytes], "nameFile.pdf", {
+        type: "application/pdf",
+      })
+      handlePdf(file)
 
-      const url = URL.createObjectURL(blob)
-
-      const link = document.createElement("a")
-      link.href = url
-      link.download = "document.pdf"
-      // link.click()
-      await storeDocument(pdfBytes, documentName, classification)
-      setIsGenerated(true)
       toast("Your PDF has been generated and downloaded.")
     } catch (error) {
       toast("An error occurred while generating your PDF. Please try again.")

@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { INVOICE_CUSTOMER } from "@/lib/constants"
+import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
 
 import { useGlobalStore } from "@/stores/globalStore"
 const formSchema = z.object({
@@ -39,10 +39,16 @@ export function EmailForm() {
       to: "",
       subject:
         document?.type === INVOICE_CUSTOMER
-          ? "facture client"
-          : "note de frais",
-      message: `Bonjour, Veuillez trouver en pièce jointe une ${
-        document?.type === INVOICE_CUSTOMER ? "facture client" : "note de frais"
+          ? "Facture client"
+          : document?.type === COSTS
+          ? "Note de frais"
+          : "Document(s) Comptable",
+      message: `Bonjour, Veuillez trouver en pièce jointe:  ${
+        document?.type === INVOICE_CUSTOMER
+          ? " les factures clients"
+          : document?.type === COSTS
+          ? "les notes de frais"
+          : "les documents comptables"
       }`,
     },
   })
@@ -54,8 +60,6 @@ export function EmailForm() {
       formData.append("to", values.to)
       formData.append("subject", values.subject)
       formData.append("message", values.message)
-      // formData.append("files", selectedFiles)
-      // console.log(typeof selectedFiles)
 
       if (pdfUrl) {
         const response = await fetch(pdfUrl)
@@ -66,8 +70,7 @@ export function EmailForm() {
         // console.log(typeof file, file)
         formData.append("files", file)
       }
-      // console.log(formData.get("files"), formData.get("to"))
-      // return
+
       const response = await fetch("/api/send-email", {
         method: "POST",
         body: formData,

@@ -18,7 +18,7 @@ export const ImageUploader = ({ onImagesSelected }: ImageUploaderProps) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "image/*": [".png", ".jpg", ".jpeg", ".heic"],
+      "image/*": [".png", ".jpg", ".jpeg", ".heic", ".webp"],
       "application/pdf": [".pdf"],
     },
     multiple: true,
@@ -38,7 +38,7 @@ export const ImageUploader = ({ onImagesSelected }: ImageUploaderProps) => {
       <input {...getInputProps()} />
       <div className='flex flex-col items-center gap-4'>
         {isDragActive ? (
-          <ImageIcon className='w-12 h-12 text-primary animate-bounce' />
+          <ImageIcon className='w-12 h-12 text-card-foreground animate-bounce' />
         ) : (
           <UploadIcon className='w-12 h-12 text-card-foreground' />
         )}
