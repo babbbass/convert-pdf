@@ -22,11 +22,14 @@ export default function Home() {
   >([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
+
   const handleImagesSelected = useCallback((files: File[]) => {
     const newImages = files.map((file) => ({
       id: Math.random().toString(36).substr(2, 9),
       file,
-      preview: URL.createObjectURL(file),
+      preview: file.type.startsWith("image/")
+        ? URL.createObjectURL(file)
+        : "/pdf.png",
     }))
     setImages((prev) => [...prev, ...newImages])
     setIsGenerated(false)
