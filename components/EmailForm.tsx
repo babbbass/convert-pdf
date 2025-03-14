@@ -101,16 +101,12 @@ export function EmailForm() {
   //   }
   // }
   // const generatedPdfUrl = `/tmp/${document?.type}/${document?.name}`
-  const generatedPdfUrl = document?.name
-    ? `/api/file?filename=${encodeURIComponent(document.name)}`
-    : null
-  useEffect(() => {
-    const fetchPdf = async () => {
-      setPdfUrl(generatedPdfUrl)
-    }
 
-    fetchPdf()
-  }, [])
+  useEffect(() => {
+    if (document?.filePath) {
+      setPdfUrl(document.filePath)
+    }
+  }, [document?.filePath])
 
   return (
     <Form {...form}>

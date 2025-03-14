@@ -88,19 +88,19 @@ export default function Home() {
   //   return ret?.data.text
   // }
 
-  function generateNameDocument(classification: number) {
-    const date = formatDateOfDay()
+  function generateTypeDocument(classification: number) {
     const type =
       classification === 1
         ? INVOICE_CUSTOMER
         : classification === 0
         ? COSTS
         : ACCOUNTANT
-    const documentName = `${type}_${date}.pdf`
-    setDocument({
-      name: documentName,
-      type,
-    })
+
+    return type
+  }
+  function generateNameDocument(typeDocument: string) {
+    const date = formatDateOfDay()
+    const documentName = `${typeDocument}_${date}.pdf`
 
     return documentName
   }
@@ -121,12 +121,22 @@ export default function Home() {
 
     //const { classification } = await classifyDocument(textOfDocument)
     const classification = "2"
-    const documentName = generateNameDocument(Number(classification))
-    const store = await storeDocument(document, documentName, classification)
-    if (!store?.ok) {
-      console.error(store)
+    const documentType = generateTypeDocument(Number(classification))
+    const documentName = generateNameDocument(documentType)
+    const docStored = await storeDocument(
+      document,
+      documentName,
+      classification
+    )
+    if (!docStored.success) {
+      console.error(docStored)
       return "erreur upload"
     }
+    setDocument({
+      name: documentName,
+      type: documentType,
+      filePath: docStored.filePath,
+    })
     setIsGenerated(true)
   }
 
