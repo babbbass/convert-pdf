@@ -1,5 +1,6 @@
 import { Logo } from "./Logo"
 import { Button } from "./ui/button"
+import { ChevronRight } from "lucide-react"
 
 export function Header() {
   return (
@@ -11,10 +12,12 @@ export function Header() {
         </p>
       </section>
       <section className='flex gap-2'>
-        <Button className='bg-card text-slate-50 rounded-xl'>
+        <Button className='bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
+          Connexion <ChevronRight className='ml-0 h-4 w-4' />
+        </Button>
+        <Button className='bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
           Demo gratuite
         </Button>
-        <Button className='bg-card text-slate-50 rounded-xl'>Connexion</Button>
       </section>
     </header>
   )

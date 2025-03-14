@@ -14,7 +14,7 @@ export function SendEmailTrigger() {
         <Mail className='mr-2 h-5 w-5' />
         Envoi PDF
       </DialogTrigger>
-      <DialogContent className='bg-slate-50 rounded-2xl w-full'>
+      <DialogContent className='bg-slate-50 rounded-2xl'>
         <DialogTitle className='font-bold text-2xl text-secondary text-center'>
           Envoyez votre PDF
         </DialogTitle>

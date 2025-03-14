@@ -203,7 +203,7 @@ export default function Home() {
   }, [images.length])
 
   return (
-    <div className='bg-gradient-to-b from-white to-gray-50 px-4 py-8 flex-1'>
+    <div className=' px-4 py-8 flex-1'>
       <div className='max-w-4xl mx-auto space-y-8'>
         <div className='text-center space-y-4'>
           <h1 className='text-4xl font-bold tracking-tight text-primary'>
