@@ -6,7 +6,7 @@ import { PDFDocument } from "pdf-lib"
 import { toast } from "sonner"
 import { reorderedItem } from "@/lib/types"
 import { SendEmailTrigger } from "@/components/SendEmailTrigger"
-import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
+// import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
 import { FileText, Loader2 } from "lucide-react"
 import { useTesseract } from "@/hooks/useTesseract"
 import { formatDateOfDay } from "@/lib/date"
@@ -104,13 +104,13 @@ export default function Home() {
     return documentName
   }
   async function handlePdf(document: File | Uint8Array<ArrayBufferLike>) {
-    let textOfDocument: string | undefined = ""
+    // let textOfDocument: string | undefined = ""
     try {
       if (!worker) {
         throw new Error("OCR not initialized")
       }
-      textOfDocument = await extractTextFromPdf(document, worker)
-      console.log(textOfDocument)
+      // textOfDocument = await extractTextFromPdf(document, worker)
+      // console.log(textOfDocument)
     } catch (error) {
       console.error(error)
       toast(
@@ -185,8 +185,8 @@ export default function Home() {
       const file = new File([pdfBytes], "nameFile.pdf", {
         type: "application/pdf",
       })
-      handlePdf(file)
-
+      await handlePdf(file)
+      setIsGenerating(false)
       toast("Your PDF has been generated and downloaded.")
     } catch (error) {
       toast("An error occurred while generating your PDF. Please try again.")
