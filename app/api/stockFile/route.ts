@@ -20,14 +20,14 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     // Définir le chemin du dossier
-    const baseDir = path.join(process.cwd(), "/public")
+    const publicDir = path.join(process.cwd(), "public")
     const targetFolder =
       Number(classification) === 1
         ? INVOICE_CUSTOMER
         : Number(classification) === 0
         ? COSTS
         : ACCOUNTANT
-    const targetPath = path.join(baseDir, targetFolder)
+    const targetPath = path.join(publicDir, targetFolder)
 
     // Vérifier et créer le dossier si besoin
     if (!fs.existsSync(targetPath)) {

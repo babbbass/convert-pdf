@@ -1,6 +1,6 @@
 const INVOICE_CUSTOMER = "Facture_Client"
 const COSTS = "Frais"
-const ACCOUNTANT = "Document Comptable"
+const ACCOUNTANT = "Document_Comptable"
 const NUMERISATION_COSTS = 0
 const NUMERISATION_INVOICES = 1
 const NUMERISATION_ACCOUNTANT = 2
