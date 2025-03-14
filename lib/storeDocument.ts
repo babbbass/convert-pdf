@@ -9,8 +9,14 @@ export async function storeDocument(
   const formData = new FormData()
   formData.append("file", file)
   formData.append("classification", classification)
-  await fetch("/api/stockFile", {
-    method: "POST",
-    body: formData,
-  })
+  try {
+    const response = await fetch("/api/stockFile", {
+      method: "POST",
+      body: formData,
+    })
+
+    return response
+  } catch (error) {
+    console.error(error)
+  }
 }

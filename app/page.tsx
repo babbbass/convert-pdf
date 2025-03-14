@@ -121,7 +121,11 @@ export default function Home() {
     //const { classification } = await classifyDocument(textOfDocument)
     const classification = "2"
     const documentName = generateNameDocument(Number(classification))
-    await storeDocument(document, documentName, classification)
+    const store = await storeDocument(document, documentName, classification)
+    if (!store?.ok) {
+      console.error(store)
+      return "erreur upload"
+    }
     setIsGenerated(true)
   }
 
@@ -185,9 +189,13 @@ export default function Home() {
       const file = new File([pdfBytes], "nameFile.pdf", {
         type: "application/pdf",
       })
-      await handlePdf(file)
+      const response = await handlePdf(file)
+      if (response) {
+        toast("Erreur lors de la generation du PDF")
+        return
+      }
       setIsGenerating(false)
-      toast("Your PDF has been generated and downloaded.")
+      toast("Votre PDF a été généré et téléchargé. Merci.")
     } catch (error) {
       toast("An error occurred while generating your PDF. Please try again.")
       console.error("Error generating PDF:", error)

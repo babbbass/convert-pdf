@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
+import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,10 +19,14 @@ export async function POST(req: NextRequest) {
     // Convertir le fichier en buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-
     // Définir le chemin du dossier
-    const baseDir = path.join(process.cwd(), "public")
-    const targetFolder = Number(classification) === 1 ? INVOICE_CUSTOMER : COSTS
+    const baseDir = path.join(process.cwd(), "/public")
+    const targetFolder =
+      Number(classification) === 1
+        ? INVOICE_CUSTOMER
+        : Number(classification) === 0
+        ? COSTS
+        : ACCOUNTANT
     const targetPath = path.join(baseDir, targetFolder)
 
     // Vérifier et créer le dossier si besoin
