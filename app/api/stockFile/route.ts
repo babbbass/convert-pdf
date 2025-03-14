@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
+// import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
     const file = formData.get("file") as File
-    const classification = formData.get("classification") as string
+    // const classification = formData.get("classification") as string
 
     if (!file) {
       return NextResponse.json(
@@ -26,15 +26,15 @@ export async function POST(req: NextRequest) {
       process.env.NODE_ENV === "production"
         ? "/tmp"
         : path.join(process.cwd(), "public")
-    const targetFolder =
-      Number(classification) === 1
-        ? INVOICE_CUSTOMER
-        : Number(classification) === 0
-        ? COSTS
-        : ACCOUNTANT
+    // const targetFolder =
+    //   Number(classification) === 1
+    //     ? INVOICE_CUSTOMER
+    //     : Number(classification) === 0
+    //     ? COSTS
+    //     : ACCOUNTANT
     const targetPath = path.join(
-      publicDir,
-      process.env.NODE_ENV === "production" ? "" : targetFolder
+      publicDir
+      // process.env.NODE_ENV === "production" ? "" : targetFolder
     )
 
     // check and create target folder
@@ -45,9 +45,7 @@ export async function POST(req: NextRequest) {
     // Save file
     const filePath = path.join(targetPath, file.name)
     fs.writeFileSync(filePath, buffer)
-    const publicUrl = `/api/file?filename=${encodeURIComponent(
-      file.name
-    )}&type=${targetFolder}`
+    const publicUrl = `/api/file?filename=${encodeURIComponent(file.name)}`
 
     return NextResponse.json({ success: true, publicUrl }, { status: 200 })
   } catch (error) {

@@ -90,15 +90,16 @@ export default function Home() {
 
   function generateNameDocument(classification: number) {
     const date = formatDateOfDay()
-    const documentName = `${date}.pdf`
+    const type =
+      classification === 1
+        ? INVOICE_CUSTOMER
+        : classification === 0
+        ? COSTS
+        : ACCOUNTANT
+    const documentName = `${type}_${date}.pdf`
     setDocument({
       name: documentName,
-      type:
-        classification === 1
-          ? INVOICE_CUSTOMER
-          : classification === 0
-          ? COSTS
-          : ACCOUNTANT,
+      type,
     })
 
     return documentName

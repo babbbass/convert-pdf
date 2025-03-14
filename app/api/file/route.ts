@@ -5,16 +5,16 @@ import path from "path"
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const filename = searchParams.get("filename")
-  const type = searchParams.get("type")
+  //const type = searchParams.get("type")
 
-  if (!filename || !type) {
+  if (!filename) {
     return new NextResponse("Fichier non trouvé", { status: 404 })
   }
   const diretory =
     process.env.NODE_ENV === "production"
       ? "/tmp"
       : path.join(process.cwd(), "public")
-  const filePath = path.join(diretory, type, filename)
+  const filePath = path.join(diretory, filename)
 
   try {
     const fileBuffer = fs.readFileSync(filePath)
