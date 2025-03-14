@@ -45,8 +45,11 @@ export async function POST(req: NextRequest) {
     // Save file
     const filePath = path.join(targetPath, file.name)
     fs.writeFileSync(filePath, buffer)
+    const publicUrl = `/api/file?filename=${encodeURIComponent(
+      file.name
+    )}&type=${targetFolder}`
 
-    return NextResponse.json({ success: true, filePath })
+    return NextResponse.json({ success: true, publicUrl }, { status: 200 })
   } catch (error) {
     console.error("Erreur lors de l'upload:", error)
     return NextResponse.json(

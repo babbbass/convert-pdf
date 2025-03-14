@@ -100,9 +100,14 @@ export function EmailForm() {
   //     setSelectedFiles((prevFiles) => [...prevFiles, ...newFiles])
   //   }
   // }
+  // const generatedPdfUrl = `/tmp/${document?.type}/${document?.name}`
+  const generatedPdfUrl = document?.name
+    ? `/api/file?filename=${encodeURIComponent(document.name)}&type=${
+        document.type
+      }`
+    : null
   useEffect(() => {
     const fetchPdf = async () => {
-      const generatedPdfUrl = `/${document?.type}/${document?.name}`
       setPdfUrl(generatedPdfUrl)
     }
 
