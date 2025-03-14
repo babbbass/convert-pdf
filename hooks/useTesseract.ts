@@ -1,9 +1,10 @@
 "use client"
+// import { createWorker, Worker as TesseractWorker } from "tesseract.js/legacy";
 import { createWorker, Worker as TesseractWorker } from "tesseract.js"
 import { useEffect, useState } from "react"
 
 export function useTesseract() {
-  const [worker, setWorker] = useState<TesseractWorker | null>(null)
+  const [worker, setWorker] = useState<TesseractWorker>()
 
   useEffect(() => {
     const initWorker = async () => {
@@ -13,18 +14,10 @@ export function useTesseract() {
     initWorker()
 
     return () => {
-      if (worker) {
-        worker.terminate()
-      }
+      if (!worker) return
+      worker?.terminate()
     }
-  }, [worker])
+  }, [])
 
   return worker
 }
-
-// export async function extractText(imagePath: string) {
-//   const worker = await createWorker("fra")
-//   const ret = await worker.recognize(imagePath)
-//   await worker.terminate()
-//   return ret.data.text
-// }
