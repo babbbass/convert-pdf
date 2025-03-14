@@ -16,25 +16,33 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Convertir le fichier en buffer
+    // Convert file in buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    // Définir le chemin du dossier
-    const publicDir = path.join(process.cwd(), "public")
+    // Define path of the public folder
+
+    // const publicDir = path.join(process.cwd(), "public")
+    const publicDir =
+      process.env.NODE_ENV === "production"
+        ? "/tmp"
+        : path.join(process.cwd(), "public")
     const targetFolder =
       Number(classification) === 1
         ? INVOICE_CUSTOMER
         : Number(classification) === 0
         ? COSTS
         : ACCOUNTANT
-    const targetPath = path.join(publicDir, targetFolder)
+    const targetPath = path.join(
+      publicDir,
+      process.env.NODE_ENV === "production" ? "" : targetFolder
+    )
 
-    // Vérifier et créer le dossier si besoin
+    // check and create target folder
     if (!fs.existsSync(targetPath)) {
       fs.mkdirSync(targetPath, { recursive: true })
     }
 
-    // Sauvegarder le fichier
+    // Save file
     const filePath = path.join(targetPath, file.name)
     fs.writeFileSync(filePath, buffer)
 
