@@ -43,7 +43,7 @@ export default function RootLayout({
     <ClerkProvider localization={frFR}>
       <html lang='fr'>
         <body
-          className={`flex bg-slate-50 min-h-screen overflow-hidden max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`flex bg-slate-50 min-h-screen overflow-x-hidden max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           {children}
           <Toaster />
