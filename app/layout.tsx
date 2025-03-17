@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Photo to Pdf",
-  description: "Convert your photos into beautiful PDF documents",
+  title: "Smart Docs",
+  description: "Gestion intelligente des documents",
   manifest: "/manifest.json",
   icons: [
     { rel: "icon", url: "/icons/icon-192x192.png" },
