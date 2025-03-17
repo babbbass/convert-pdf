@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 import type { Viewport } from "next"
-import { Wrapper } from "@/components/Wrapper"
+import { ClerkProvider } from "@clerk/nextjs"
+import { frFR } from "@clerk/localizations"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,13 +40,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='fr'>
-      <body
-        className={`flex bg-slate-50 min-h-screen max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Wrapper>{children}</Wrapper>
-        <Toaster />
-      </body>
-    </html>
+    <ClerkProvider localization={frFR}>
+      <html lang='fr'>
+        <body
+          className={`flex bg-slate-50 min-h-screen max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
