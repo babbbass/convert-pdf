@@ -21,16 +21,18 @@ const Dropdown = () => {
       </Button>
 
       <div
-        className={`absolute right-0 -top-10 mt-2 w-48 rounded-md shadow-lg bg-slate-50 ring-1 ring-gray-100 h-screen p-4 py-28 ring-opacity-5 transform transition-all duration-300 ease-in-out ${
+        className={`absolute right-0 -top-10 mt-2 w-screen rounded-md shadow-lg bg-slate-50 ring-1 ring-gray-100 h-screen p-4 py-28 ring-opacity-5 transform transition-all duration-300 ease-in-out ${
           isOpen
             ? "translate-x-[calc(0%+14px)]"
             : "translate-x-[calc(100%+18px)]"
         }`}
       >
-        <section className='flex flex-col gap-2'>
+        <section className='flex flex-col gap-2 items-center'>
           <Logo />
-          <p className='text-sm text-secondary font-medium text-center'>Menu</p>
-          <div className='flex flex-col gap-2 mt-2 border-t pt-4 border-slate-200'>
+          <p className='w-5/6 text-secondary font-medium text-center mt-4 border-b pb-2 border-slate-200'>
+            Menu
+          </p>
+          <div className='flex flex-col gap-4 mt-2'>
             <Button className='inline-flex md:hidden bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
               Connexion <ChevronRight className='ml-0 h-4 w-4' />
             </Button>
