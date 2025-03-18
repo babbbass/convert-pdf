@@ -25,7 +25,7 @@ export function Footer() {
           </Link>
         </div>
       </section>
-      <section className='text-sm md:text-base text-primary'>
+      <section className='text-sm text-primary'>
         ©2025 PDF Technologies, Inc., pixeloft Company. Tous drois réservés.
       </section>
     </footer>
