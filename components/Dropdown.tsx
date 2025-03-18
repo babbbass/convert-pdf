@@ -37,12 +37,8 @@ export function Dropdown() {
           </p>
           <div className='flex flex-col gap-4 mt-2 items-start w-5/6 px-2 py-4 text-secondary text-sm font-medium'>
             <Link href={"/historique"}>Historique</Link>
-            {/* <Button className='inline-flex md:hidden bg-transparent border-0  hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
-              Demo gratuite
-            </Button> */}
             <SignedIn>
               <UserButton />
-              {/* Mon compte */}
             </SignedIn>
             <SignedOut>
               <Button className='inline-flex md:hidden bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>

@@ -1,7 +1,7 @@
 {
-  "short_name": "PhotoPDFify",
-  "name": "Photo to Pdf",
-  "description": "Convert your photos into beautiful PDF documents",
+  "short_name": "Smart Docs",
+  "name": "Smart Docs",
+  "description": "Gestion intelligente des documents",
   "icons": [
     {
       "src": "favicon.ico",
@@ -23,5 +23,35 @@
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "orientation": "any"
+  "orientation": "any",
+  "screenshots": [
+    {
+      "src": "/screenshots/Capture_smart_doc_1_520x345.png",
+      "sizes": "520x345",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Page d'accueil"
+    },
+    {
+      "src": "/screenshots/Capture_smart_doc_2_520x432.png",
+      "sizes": "520x432",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Image téléchargée"
+    },
+    {
+      "src": "/screenshots/Capture_smart_doc_3_520x491.png",
+      "sizes": "520x491",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Formulaire d'envoi"
+    },
+    {
+      "src": "/screenshots/Capture_smart_doc_4_520x618.png",
+      "sizes": "520x618",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Menu mobile"
+    }
+  ]
 }
