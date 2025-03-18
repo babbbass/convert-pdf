@@ -9,6 +9,11 @@
       "type": "image/x-icon"
     },
     {
+      "src": "icons/icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
       "src": "icons/icon-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
@@ -19,39 +24,54 @@
       "sizes": "512x512"
     }
   ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+smartdocs",
+      "url": "/?url=%s"
+    }
+  ],
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "orientation": "any",
+  "related_applications": [],
+  "prefer_related_applications": false,
   "screenshots": [
     {
-      "src": "/screenshots/Capture_smart_doc_1_520x345.png",
-      "sizes": "520x345",
+      "src": "/screenshots/Capture_smart_doc_1_520x900.png",
+      "sizes": "520x900",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Page d'accueil"
     },
     {
-      "src": "/screenshots/Capture_smart_doc_2_520x432.png",
-      "sizes": "520x432",
+      "src": "/screenshots/Capture_smart_doc_2_520x900.png",
+      "sizes": "520x900",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Image téléchargée"
     },
     {
-      "src": "/screenshots/Capture_smart_doc_3_520x491.png",
-      "sizes": "520x491",
+      "src": "/screenshots/Capture_smart_doc_3_520x900.png",
+      "sizes": "520x900",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Fichier converti"
+    },
+    {
+      "src": "/screenshots/Capture_smart_doc_4_520x900.png",
+      "sizes": "520x900",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Formulaire d'envoi"
     },
     {
-      "src": "/screenshots/Capture_smart_doc_4_520x618.png",
-      "sizes": "520x618",
+      "src": "/screenshots/Capture_smart_doc_desktop_1280x720.png",
+      "sizes": "1280x720",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Menu mobile"
+      "form_factor": "wide",
+      "label": "Vue desktop"
     }
   ]
 }
