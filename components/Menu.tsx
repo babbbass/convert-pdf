@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { Dropdown } from "./Dropdown"
+import { InstallPWAButton } from "@/components/InstallPWAButton"
 
 export const Menu = () => {
   return (
@@ -18,6 +19,7 @@ export const Menu = () => {
           {/* <SignUpButton /> */}
         </SignedOut>
         <SignedIn>
+          <InstallPWAButton />
           <UserButton />
         </SignedIn>
       </div>

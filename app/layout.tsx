@@ -5,6 +5,7 @@ import "./globals.css"
 import type { Viewport } from "next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { frFR } from "@clerk/localizations"
+import { ServiceWorkerProvider } from "@/components/ServiceWorkerProvider"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
         <body
           className={`flex bg-slate-50 min-h-screen overflow-x-hidden max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <ServiceWorkerProvider />
           {children}
           <Toaster />
         </body>

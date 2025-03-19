@@ -6,6 +6,7 @@ import { Button } from "./ui/button"
 import { ChevronRight, Menu as MenuIcon, X } from "lucide-react"
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
+import { InstallPWAButton } from "@/components/InstallPWAButton"
 
 export function Dropdown() {
   const [isOpen, setIsOpen] = useState(false)
@@ -45,6 +46,7 @@ export function Dropdown() {
                 Connexion <ChevronRight className='ml-0 h-4 w-4' />
               </Button>
             </SignedOut>
+            <InstallPWAButton />
           </div>
         </section>
       </div>
