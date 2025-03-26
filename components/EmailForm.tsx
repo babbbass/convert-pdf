@@ -71,14 +71,14 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
         formData.append("files", file)
       }
 
-      // const response = await fetch("/api/send-email", {
-      //   method: "POST",
-      //   body: formData,
-      // })
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        body: formData,
+      })
 
-      // if (!response.ok) {
-      //   throw new Error("Erreur lors de l'envoi de l'email")
-      // }
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'envoi de l'email")
+      }
       toast("Email envoyé avec succès")
       onClose()
       form.reset()
