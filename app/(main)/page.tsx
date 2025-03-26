@@ -203,11 +203,27 @@ export default function Home() {
       })
       const response = await handlePdf(file)
       if (response) {
-        toast("Erreur lors de la generation du PDF")
+        toast("Erreur lors de la generation du PDF", {
+          style: {
+            backgroundColor: "red",
+            color: "white",
+            padding: "10px",
+          },
+          position: "top-right",
+        })
         return
       }
       setIsGenerating(false)
-      toast("Votre PDF a été généré et téléchargé. Merci.")
+      setIsGenerated(false)
+      setImages([])
+      toast("Votre PDF a été généré vous pouvez maintenant l'envoyer. ", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+          padding: "10px",
+        },
+        position: "top-right",
+      })
     } catch (error) {
       toast("An error occurred while generating your PDF. Please try again.")
       console.error("Error generating PDF:", error)
@@ -245,7 +261,7 @@ export default function Home() {
           {images.length > 0 && (
             <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
               {isGenerated ? (
-                <div className='flex justify-center w-3/4'>
+                <div className='flex justify-center w-5/6'>
                   <SendEmailTrigger
                     isOpen={isDialogOpen}
                     setIsDialogOpen={setIsDialogOpen}
@@ -255,7 +271,7 @@ export default function Home() {
                 <button
                   onClick={handleFiles}
                   disabled={isGenerating}
-                  className='w-3/4 py-4 rounded-2xl font-medium text-card-foreground 
+                  className='w-5/6 py-4 rounded-2xl font-medium text-card-foreground 
                 hover:bg-sky-500 transition-all duration-300
                 disabled:opacity-50 disabled:cursor-not-allowed
                 flex items-center justify-center gap-2 bg-sky-400 cursor-pointer'

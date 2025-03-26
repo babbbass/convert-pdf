@@ -79,7 +79,14 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
       if (!response.ok) {
         throw new Error("Erreur lors de l'envoi de l'email")
       }
-      toast("Email envoyé avec succès")
+      toast("Email envoyé avec succès", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+          padding: "10px",
+        },
+        position: "top-right",
+      })
       onClose()
       form.reset()
       // if (fileInput) {
