@@ -1,54 +1,56 @@
 import { NextResponse } from "next/server"
-import { Resend } from "resend"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { currentUser } from "@clerk/nextjs/server"
+import Mailgun from "mailgun.js"
+import formData from "form-data"
 
 export async function POST(req: Request) {
-  const formData = await req.formData()
-  const {
-    files: attachments,
-    subject,
-    message,
-    to,
-  } = Object.fromEntries(formData.entries())
-  if (!attachments || !subject || !message || !to) {
-    return NextResponse.json(
-      { message: "Missing required fields" },
-      { status: 400 }
-    )
-  }
-
-  if (!(attachments instanceof File)) {
-    return NextResponse.json(
-      { message: "Invalid file attachment" },
-      { status: 400 }
-    )
+  const user = await currentUser()
+  if (!user) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
 
   try {
-    const response = await resend.emails.send({
-      from: "onboarding@resend.dev",
+    const form = await req.formData()
+    const attachments = form.get("files") as File
+    const subject = form.get("subject")
+    const message = form.get("message")
+    const to = form.get("to")
+
+    if (!attachments || !subject || !message || !to) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      )
+    }
+    const mailgun = new Mailgun(formData)
+    const client = mailgun.client({
+      username: "api",
+      key: process.env.MAILGUN_API_KEY!,
+    })
+    const email = user.emailAddresses[0].emailAddress
+    const fileBuffer = Buffer.from(await attachments.arrayBuffer())
+
+    const response = await client.messages.create(process.env.MAILGUN_DOMAIN!, {
+      from: email,
       to: to as string,
       subject: subject as string,
       text: message as string,
-      attachments: [
+      attachment: [
         {
-          filename: attachments.name as string,
-          content: Buffer.from(await attachments.arrayBuffer()).toString(
-            "base64"
-          ),
+          filename: attachments.name,
+          data: fileBuffer,
+          contentType: attachments.type,
+          knownLength: attachments.size,
         },
       ],
     })
 
-    return NextResponse.json({ success: true, response })
-  } catch (error: unknown) {
+    return NextResponse.json({ success: true, response: response })
+  } catch (error) {
     console.error("Error sending email:", error)
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { message: "Failed to send email", error: error.message },
-        { status: 500 }
-      )
-    }
+    return NextResponse.json(
+      { message: "Failed to send email", error: (error as Error).message },
+      { status: 500 }
+    )
   }
 }

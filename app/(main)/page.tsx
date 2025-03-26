@@ -22,10 +22,11 @@ export default function Home() {
   >([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleImagesSelected = useCallback((files: File[]) => {
     const newImages = files.map((file) => ({
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 9),
       file,
       preview: file.type.startsWith("image/")
         ? URL.createObjectURL(file)
@@ -245,7 +246,10 @@ export default function Home() {
             <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
               {isGenerated ? (
                 <div className='flex justify-center w-3/4'>
-                  <SendEmailTrigger />
+                  <SendEmailTrigger
+                    isOpen={isDialogOpen}
+                    setIsDialogOpen={setIsDialogOpen}
+                  />
                 </div>
               ) : (
                 <button
