@@ -11,6 +11,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:push": "prisma db push",
+    "postinstall": "prisma generate",
+    "prebuild": "prisma generate",
     "predeploy": "prisma generate && prisma migrate deploy",
     "postbuild": "npm run predeploy"
   },
