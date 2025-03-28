@@ -59,7 +59,7 @@ export default function Home() {
   function getAppropriateScale(width: number, height: number) {
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
-    const isPortrait = 0 //screenHeight > screenWidth
+    const isPortrait = 0
 
     const scaleFactor = isPortrait
       ? screenWidth / width / 4
@@ -105,7 +105,7 @@ export default function Home() {
 
     return documentName
   }
-  async function handlePdf(document: File | Uint8Array<ArrayBufferLike>) {
+  async function generatePdf(document: File | Uint8Array<ArrayBufferLike>) {
     // let textOfDocument: string | undefined = ""
     try {
       if (!worker) {
@@ -116,7 +116,15 @@ export default function Home() {
     } catch (error) {
       console.error(error)
       toast(
-        "Une erreur lors de la lecture de votre Document. Veuillez réessayer."
+        "Une erreur lors de la lecture de votre Document. Veuillez réessayer.",
+        {
+          style: {
+            backgroundColor: "#c10007",
+            color: "#f8fafc",
+            padding: "10px",
+          },
+          position: "top-right",
+        }
       )
     }
 
@@ -187,7 +195,14 @@ export default function Home() {
 
   const handleFiles = async () => {
     if (images.length === 0) {
-      toast("Please select at least one image to generate a PDF.")
+      toast("Veuillez sélectionner au moins une image pour générer un PDF", {
+        style: {
+          backgroundColor: "#00a6f4",
+          color: "#f8fafc",
+          padding: "10px",
+        },
+        position: "top-right",
+      })
       return
     }
     setIsGenerating(true)
@@ -201,29 +216,28 @@ export default function Home() {
       const file = new File([pdfBytes], "nameFile.pdf", {
         type: "application/pdf",
       })
-      const response = await handlePdf(file)
+      const response = await generatePdf(file)
       if (response) {
         toast("Erreur lors de la generation du PDF", {
           style: {
-            backgroundColor: "red",
-            color: "white",
+            backgroundColor: "#c10007",
+            color: "#f8fafc",
             padding: "10px",
           },
           position: "top-right",
         })
         return
       }
-      setIsGenerating(false)
-      setIsGenerated(false)
-      setImages([])
+
       toast("Votre PDF a été généré vous pouvez maintenant l'envoyer. ", {
         style: {
-          backgroundColor: "green",
-          color: "white",
+          backgroundColor: "#00a63e",
+          color: "#f8fafc",
           padding: "10px",
         },
         position: "top-right",
       })
+      setIsGenerated(true)
     } catch (error) {
       toast("An error occurred while generating your PDF. Please try again.")
       console.error("Error generating PDF:", error)

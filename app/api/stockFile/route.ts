@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Déterminer le dossier cible
+    // define the target folder
     const targetFolder =
       Number(classification) === 1
         ? INVOICE_CUSTOMER
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         ? COSTS
         : ACCOUNTANT
 
-    // Upload vers Vercel Blob
+    // Upload towards Vercel Blob
     const { url } = await put(`${targetFolder}/${file.name}`, file, {
       access: "public",
       token: process.env.BLOB_READ_WRITE_TOKEN,

@@ -81,8 +81,8 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
       }
       toast("Email envoyé avec succès", {
         style: {
-          backgroundColor: "green",
-          color: "white",
+          backgroundColor: "#00a63e",
+          color: "#f8fafc",
           padding: "10px",
         },
         position: "top-right",
