@@ -9,12 +9,16 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(uuid()) 
-  email         String     @unique 
-  documents     Document[] 
-  sentHistories History[]  @relation("senderHistories") // Relation inverse pour History.sender
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id                  String      @id @default(uuid()) 
+  clerkUserId         String      @unique
+  email               String      @unique
+  firstName           String?
+  lastName            String?
+  profileImageUrl     String?
+  documents           Document[] 
+  sentHistories       History[]   @relation("senderHistories")
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
 }
 
 model Document {
