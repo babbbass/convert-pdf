@@ -194,17 +194,6 @@ export default function Home() {
   }
 
   const handleFiles = async () => {
-    if (images.length === 0) {
-      toast("Veuillez sélectionner au moins une image pour générer un PDF", {
-        style: {
-          backgroundColor: "#00a6f4",
-          color: "#f8fafc",
-          padding: "10px",
-        },
-        position: "top-right",
-      })
-      return
-    }
     setIsGenerating(true)
     try {
       const pdfDoc = await PDFDocument.create()

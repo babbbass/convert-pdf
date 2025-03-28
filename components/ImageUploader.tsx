@@ -2,6 +2,7 @@ import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import { ImageIcon, UploadIcon } from "lucide-react"
 import { Card } from "./ui/card"
+import { toast } from "sonner"
 
 interface ImageUploaderProps {
   onImagesSelected: (files: File[]) => void
@@ -15,8 +16,23 @@ export const ImageUploader = ({ onImagesSelected }: ImageUploaderProps) => {
     [onImagesSelected]
   )
 
+  const onDropRejected = () => {
+    toast(
+      "Format de fichier non supporté. Veuillez choisir une image ou un PDF.",
+      {
+        style: {
+          backgroundColor: "#fd9a00",
+          color: "#f8fafc",
+          padding: "10px",
+        },
+        position: "top-right",
+      }
+    )
+  }
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected,
     accept: {
       "image/*": [".png", ".jpg", ".jpeg", ".heic", ".webp"],
       "application/pdf": [".pdf"],
