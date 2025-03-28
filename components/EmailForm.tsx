@@ -125,7 +125,9 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
           name='to'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Destinataire</FormLabel>
+              <FormLabel className='text-secondary font-semibold'>
+                Destinataire
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder='email@exemple.com'
@@ -143,7 +145,9 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
           name='subject'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sujet</FormLabel>
+              <FormLabel className='text-secondary font-semibold'>
+                Sujet
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="Sujet de l'email"
@@ -161,7 +165,9 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
           name='message'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message</FormLabel>
+              <FormLabel className='text-secondary font-semibold'>
+                Votre message
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder='Votre message...'
