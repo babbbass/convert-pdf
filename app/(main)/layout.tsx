@@ -1,7 +1,7 @@
 import { Wrapper } from "@/components/Wrapper"
-import { Header } from "@/components/Header"
 import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
+import Providers from "./providers"
 
 export default async function RootLayout({
   children,
@@ -28,8 +28,7 @@ export default async function RootLayout({
   }
   return (
     <Wrapper>
-      <Header />
-      {children}
+      <Providers>{children}</Providers>
     </Wrapper>
   )
 }

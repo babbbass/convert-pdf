@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from "next/server"
 import { put } from "@vercel/blob"
 import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
+import prisma from "@/lib/prisma"
+import { currentUser } from "@clerk/nextjs/server"
 
 export async function POST(req: NextRequest) {
+  const clerkUser = await currentUser()
+
+  if (!clerkUser) {
+    return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { clerkUserId: clerkUser.id },
+  })
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "Utilisateur non trouvé" },
+      { status: 404 }
+    )
+  }
   try {
     const formData = await req.formData()
     const file = formData.get("file") as File
     const classification = formData.get("classification") as string
+    const recipient = formData.get("to") as string
 
     if (!file) {
       return NextResponse.json(
@@ -27,6 +46,30 @@ export async function POST(req: NextRequest) {
     const { url } = await put(`${targetFolder}/${file.name}`, file, {
       access: "public",
       token: process.env.BLOB_READ_WRITE_TOKEN,
+    })
+
+    const document = await prisma.document.create({
+      data: {
+        name: file.name,
+        url: url,
+        user: { connect: { id: user.id } },
+        history: {
+          create: {
+            sender: { connect: { id: user.id } },
+            recipient: recipient || "",
+            action: "SENT",
+          },
+        },
+      },
+      include: {
+        history: true,
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      documentId: document.id,
+      fileUrl: url,
     })
 
     return NextResponse.json({ success: true, filePath: url })
