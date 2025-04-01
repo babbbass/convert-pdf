@@ -21,7 +21,7 @@ export const Menu = () => {
         <SignedIn>
           <Link
             href={"/historique"}
-            className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'
+            className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'
           >
             Historique
           </Link>

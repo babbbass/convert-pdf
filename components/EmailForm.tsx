@@ -18,8 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { INVOICE_CUSTOMER, COSTS } from "@/lib/constants"
-
 import { useGlobalStore } from "@/stores/globalStore"
+
 const formSchema = z.object({
   to: z.string().email("Email invalide"),
   subject: z.string().min(1, "Le sujet est requis"),
@@ -60,6 +60,7 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
       formData.append("to", values.to)
       formData.append("subject", values.subject)
       formData.append("message", values.message)
+      formData.append("filePath", document?.filePath || "")
 
       if (pdfUrl) {
         const response = await fetch(pdfUrl)

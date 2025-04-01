@@ -32,7 +32,10 @@ export function Dropdown() {
         }`}
       >
         <section className='flex flex-col gap-2 items-center'>
-          <Logo />
+          <div onClick={() => setIsOpen(false)}>
+            {" "}
+            <Logo />{" "}
+          </div>
           <p className='w-5/6 text-secondary font-medium text-center mt-4 border-b pb-2 border-slate-200'>
             Menu
           </p>

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { put } from "@vercel/blob"
-import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
+import {
+  INVOICE_CUSTOMER,
+  COSTS,
+  ACCOUNTANT,
+  DOCUMENT_DOWNLOADED,
+} from "@/lib/constants"
 import prisma from "@/lib/prisma"
 import { currentUser } from "@clerk/nextjs/server"
 
@@ -25,7 +30,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData()
     const file = formData.get("file") as File
     const classification = formData.get("classification") as string
-    const recipient = formData.get("to") as string
 
     if (!file) {
       return NextResponse.json(
@@ -56,8 +60,8 @@ export async function POST(req: NextRequest) {
         history: {
           create: {
             sender: { connect: { id: user.id } },
-            recipient: recipient || "",
-            action: "SENT",
+            recipient: "",
+            action: DOCUMENT_DOWNLOADED,
           },
         },
       },
@@ -69,10 +73,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       documentId: document.id,
-      fileUrl: url,
+      filePath: url,
     })
-
-    return NextResponse.json({ success: true, filePath: url })
   } catch (error) {
     console.error("Erreur lors de l'upload:", error)
     return NextResponse.json(
