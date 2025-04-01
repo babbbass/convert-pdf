@@ -19,6 +19,12 @@ export const Menu = () => {
           {/* <SignUpButton /> */}
         </SignedOut>
         <SignedIn>
+          <Link
+            href={"/historique"}
+            className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'
+          >
+            Historique
+          </Link>
           <InstallPWAButton />
           <UserButton />
         </SignedIn>

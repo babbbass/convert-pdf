@@ -37,7 +37,9 @@ export function Dropdown() {
             Menu
           </p>
           <div className='flex flex-col gap-4 mt-2 items-start w-5/6 px-2 py-4 text-secondary text-sm font-medium'>
-            <Link href={"/historique"}>Historique</Link>
+            <Link href={"/historique"} onClick={() => setIsOpen(false)}>
+              Historique
+            </Link>
             <SignedIn>
               <UserButton />
             </SignedIn>
