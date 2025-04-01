@@ -1,9 +1,18 @@
 import React from "react"
 import prisma from "@/lib/prisma"
 import Image from "next/image"
+import { currentUser } from "@clerk/nextjs/server"
 
 export default async function page() {
+  const user = await currentUser()
+
+  if (!user) return null
+
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkUserId: user.id },
+  })
   const documents = await prisma.document.findMany({
+    where: { userId: dbUser?.id },
     include: {
       history: {
         orderBy: {
