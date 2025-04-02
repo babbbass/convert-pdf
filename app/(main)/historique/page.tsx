@@ -2,6 +2,7 @@ import React from "react"
 import prisma from "@/lib/prisma"
 import Image from "next/image"
 import { currentUser } from "@clerk/nextjs/server"
+import { Send, FileDown } from "lucide-react"
 
 export default async function page() {
   const user = await currentUser()
@@ -33,9 +34,10 @@ export default async function page() {
           Retrouvez ici tous les documents que vous avez téléchargés
         </p>
       </div>
-      <div className='overflow-hidden border shadow-sm rounded-2xl  border-secondary'>
+      {/* Desktop version */}
+      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary'>
         <table className='min-w-full divide-y divide-gray-200'>
-          <thead className='bg-gray-50'>
+          <thead className='bg-gray-50 sticky top-0'>
             <tr>
               <th
                 scope='col'
@@ -91,6 +93,58 @@ export default async function page() {
             )}
           </tbody>
         </table>
+      </div>
+      {/* Mobile version (cards) */}
+      <div className='md:hidden space-y-4'>
+        {documents.map((document) => (
+          <div
+            key={document.id}
+            className='border border-secondary rounded-2xl p-4 shadow-sm'
+          >
+            <div className='mb-3'>
+              <a
+                href={document.url}
+                className='text-lg font-medium text-secondary hover:underline hover:text-sky-800 transform duration-300 ease-in-out'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {document.name}
+              </a>
+            </div>
+
+            {document.history.map((history) => (
+              <div
+                key={history.id}
+                className='mb-2 last:mb-0 pb-2 border-b last:border-b-0'
+              >
+                <div className='flex justify-between'>
+                  <span className='font-medium'>Action:</span>
+                  <span>
+                    {history.action === "SENT" ? (
+                      <span className='flex items-center'>
+                        <Send className='h-4 w-4 mr-1' /> Envoyé
+                      </span>
+                    ) : (
+                      <span className='flex items-center'>
+                        <FileDown className='h-4 w-4 mr-1' /> Téléchargé
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div className='flex justify-between'>
+                  <span className='font-medium'>Destinataire:</span>
+                  <span>{history.recipient || "N/A"}</span>
+                </div>
+                <div className='flex justify-between'>
+                  <span className='font-medium'>Date:</span>
+                  <span>
+                    {new Date(history.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   )
