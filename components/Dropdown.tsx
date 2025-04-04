@@ -3,7 +3,13 @@
 import { useState } from "react"
 import { Logo } from "./Logo"
 import { Button } from "./ui/button"
-import { ChevronRight, Menu as MenuIcon, X } from "lucide-react"
+import {
+  ChevronRight,
+  Menu as MenuIcon,
+  X,
+  House,
+  FileStack,
+} from "lucide-react"
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
 import { InstallPWAButton } from "@/components/InstallPWAButton"
@@ -15,7 +21,7 @@ export function Dropdown() {
     <div className='relative'>
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className='bg-transparent border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl relative z-50'
+        className='bg-primary border-0 text-slate-50 text-sm font-medium  hover:cursor-pointer transition-all duration-300 rounded-2xl relative z-50'
       >
         {isOpen ? (
           <X className='h-10 w-10' />
@@ -36,12 +42,17 @@ export function Dropdown() {
             {" "}
             <Logo />{" "}
           </div>
-          <p className='w-5/6 text-secondary font-medium text-center mt-4 border-b pb-2 border-slate-200'>
-            Menu
-          </p>
-          <div className='flex flex-col gap-4 mt-2 items-start w-5/6 px-2 py-4 text-secondary text-sm font-medium'>
-            <Link href={"/historique"} onClick={() => setIsOpen(false)}>
-              Historique
+          <p className='w-5/6 text-primary text-lg font-medium text-center mt-4 border-b pb-2 border-slate-200'></p>
+          <div className='flex flex-col gap-5 mt-2 items-start w-5/6 px-2 py-4 text-primary'>
+            <Link href={"/"} onClick={() => setIsOpen(false)} className='flex'>
+              <House className='mr-2 h-5 w-5' /> Accueil
+            </Link>
+            <Link
+              href={"/historique"}
+              onClick={() => setIsOpen(false)}
+              className='flex'
+            >
+              <FileStack className='mr-2 h-5 w-5' /> Historique
             </Link>
             <SignedIn>
               <UserButton />

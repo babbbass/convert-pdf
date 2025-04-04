@@ -13,6 +13,7 @@ import { formatDateOfDay } from "@/lib/date"
 import { useGlobalStore } from "@/stores/globalStore"
 import { storeDocument } from "@/lib/storeDocument"
 import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
+import { Questions } from "@/components/Questions"
 
 export default function Home() {
   const { setDocument } = useGlobalStore()
@@ -242,16 +243,20 @@ export default function Home() {
   }, [images.length])
 
   return (
-    <div className=' px-4 py-8 flex-1'>
-      <div className='max-w-4xl mx-auto space-y-8'>
-        <div className='text-center space-y-4'>
-          <h1 className='text-4xl font-bold tracking-tight text-primary'>
-            Envoyez vos documents
+    <div className=' px-4 pb-2 flex-1'>
+      <div className='max-w-4xl mx-auto space-y-8 mb-12'>
+        <div className='text-sm md:text-lg text-center space-y-4'>
+          <h1 className='text-3xl md:text-4xl font-bold tracking-tight text-primary mb-4'>
+            Gagnez du temps sur votre comptabilité
           </h1>
-          <p className='text-lg text-sky-500'>
-            Convertissez vos photos en document PDF et envoyez les en quelques
-            secondes
+          <p className='font-medium text-secondary'>
+            Convertissez vos factures et Envoyez-les en 2 clics
           </p>
+          <ul className='flex flex-col md:flex-row gap-1 items-start md:justify-center px-2 md:gap-2'>
+            <li>✅ Cryptage sécurisé</li>
+            <li>🔄 Intégration QuickBooks</li>
+            <li>⏱️ 3x plus rapide</li>
+          </ul>
         </div>
         <ImageUploader onImagesSelected={handleImagesSelected} />
         <div className='space-y-4'>
@@ -296,6 +301,7 @@ export default function Home() {
           )}
         </div>
       </div>
+      <Questions />
     </div>
   )
 }
