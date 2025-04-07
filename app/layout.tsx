@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 import type { Viewport } from "next"
@@ -16,6 +16,8 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 })
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
   title: "Smart Docs",
@@ -44,7 +46,7 @@ export default function RootLayout({
     <ClerkProvider localization={frFR}>
       <html lang='fr'>
         <body
-          className={`flex bg-slate-50 min-h-screen overflow-x-hidden max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`flex bg-slate-50 min-h-screen overflow-x-hidden max-w-4xl mx-auto py-2 ${geistSans.variable} ${geistMono.variable} ${inter.variable} font-sans antialiased`}
         >
           <ServiceWorkerProvider />
           {children}
