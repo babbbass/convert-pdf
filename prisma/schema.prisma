@@ -24,7 +24,8 @@ model User {
 model Document {
   id          String        @id @default(uuid()) 
   name        String        
-  url         String        
+  url         String  
+  type        String        @default("Document_Comptable")      
   user        User          @relation(fields: [userId], references: [id])
   userId      String
   history     History[]     
