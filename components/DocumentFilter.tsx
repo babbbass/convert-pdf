@@ -72,7 +72,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                 scope='col'
                 className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
               >
-                Action
+                Statut
               </th>
 
               <th
@@ -144,8 +144,8 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                 className='mb-2 last:mb-0 pb-2 border-b last:border-b-0'
               >
                 <div className='flex justify-between'>
-                  <span className='font-medium'>Action:</span>
-                  <span>
+                  <span className='font-medium'>Statut:</span>
+                  <span className='underline text-secondary'>
                     {history.action === DOCUMENT_SENT ? (
                       <span className='flex items-center'>
                         <Send className='h-4 w-4 mr-1' /> Envoyé
@@ -159,7 +159,9 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                 </div>
                 <div className='flex justify-between'>
                   <span className='font-medium'>Destinataire:</span>
-                  <span>{history.recipient || "N/A"}</span>
+                  <span className='underline'>
+                    {history.recipient || "N/A"}
+                  </span>
                 </div>
                 <div className='flex justify-between'>
                   <span className='font-medium'>Date:</span>
