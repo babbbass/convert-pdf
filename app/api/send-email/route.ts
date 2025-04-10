@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         },
       ],
     })
-    // console.log(attachments)
+
     const document = await prisma.document.findFirstOrThrow({
       where: { url: filePath },
       select: { id: true },

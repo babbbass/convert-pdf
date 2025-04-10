@@ -9,17 +9,36 @@ import {
   INVOICE_CUSTOMER,
   ACCOUNTANT,
   DOCUMENT_SENT,
+  DOCUMENT_DOWNLOADED,
 } from "@/lib/constants"
 import { Document } from "@/lib/types"
+import { useGlobalStore } from "@/stores/globalStore"
+import { EmailForm } from "./EmailForm"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 export function DocumentFilter({ documents }: { documents: Document[] }) {
+  const { setDocument } = useGlobalStore()
   const [filter, setFilter] = useState<
     typeof ACCOUNTANT | typeof INVOICE_CUSTOMER | typeof COSTS
   >(ACCOUNTANT)
+  const [showForm, setShowForm] = useState(false)
 
   const filteredDocuments = documents.filter((doc) => {
     if (filter === ACCOUNTANT) return true
     return doc.type === filter
   })
+
+  if (showForm) {
+    return (
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className='bg-white rounded-2xl'>
+          <DialogTitle className='font-bold text-2xl text-secondary text-center'>
+            Envoyez votre PDF
+          </DialogTitle>
+          <EmailForm onClose={() => setShowForm(true)} />
+        </DialogContent>
+      </Dialog>
+    )
+  }
 
   if (filteredDocuments.length === 0) {
     return (
@@ -142,6 +161,17 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
               <div
                 key={history.id}
                 className='mb-2 last:mb-0 pb-2 border-b last:border-b-0'
+                onClick={() => {
+                  if (history.action === DOCUMENT_DOWNLOADED) {
+                    setDocument({
+                      name: document.name,
+                      type: document.type,
+                      filePath: document.url,
+                    })
+
+                    setShowForm(true)
+                  }
+                }}
               >
                 <div className='flex justify-between'>
                   <span className='font-medium'>Statut:</span>
