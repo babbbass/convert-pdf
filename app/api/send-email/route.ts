@@ -29,6 +29,7 @@ export async function POST(req: Request) {
     const client = mailgun.client({
       username: "api",
       key: process.env.MAILGUN_API_KEY!,
+      url: "https://api.eu.mailgun.net",
     })
     const email = user.emailAddresses[0].emailAddress
     const fileBuffer = Buffer.from(await attachments.arrayBuffer())
