@@ -22,8 +22,10 @@ import {
   DialogOverlay,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 export function DocumentFilter({ documents }: { documents: Document[] }) {
   const { setDocument } = useGlobalStore()
+  const router = useRouter()
   const [filter, setFilter] = useState<
     typeof ACCOUNTANT | typeof INVOICE_CUSTOMER | typeof COSTS
   >(ACCOUNTANT)
@@ -74,7 +76,12 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
           <DialogTitle className='font-bold text-2xl text-secondary text-center mb-6'>
             Envoyer votre PDF
           </DialogTitle>
-          <EmailForm onClose={() => setShowForm(false)} />
+          <EmailForm
+            onClose={() => {
+              setShowForm(false)
+              router.refresh()
+            }}
+          />
         </DialogContent>
       </Dialog>
     )
