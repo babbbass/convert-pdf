@@ -14,27 +14,67 @@ import {
 import { Document } from "@/lib/types"
 import { useGlobalStore } from "@/stores/globalStore"
 import { EmailForm } from "./EmailForm"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+  DialogOverlay,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 export function DocumentFilter({ documents }: { documents: Document[] }) {
   const { setDocument } = useGlobalStore()
   const [filter, setFilter] = useState<
     typeof ACCOUNTANT | typeof INVOICE_CUSTOMER | typeof COSTS
   >(ACCOUNTANT)
+  const [showDialog, setShowDialog] = useState(false)
   const [showForm, setShowForm] = useState(false)
-
   const filteredDocuments = documents.filter((doc) => {
     if (filter === ACCOUNTANT) return true
     return doc.type === filter
   })
 
+  if (showDialog) {
+    return (
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogOverlay className='bg-slate-50 fixed inset-0 z-50 backdrop-blur-sm' />
+        <DialogTrigger></DialogTrigger>
+        <DialogContent className='bg-white rounded-2xl flex flex-col pt-10'>
+          <DialogTitle className='font-bold text-2xl text-primary text-center mb-6'>
+            Action sur votre PDF
+          </DialogTitle>
+          <div className='flex w-full justify-around text-slate-50'>
+            {/* <EmailForm onClose={() => setShowForm(true)} /> */}
+            <Button
+              className='bg-green-600 rounded-2xl cursor-pointer'
+              onClick={() => {
+                setShowForm(true)
+                setShowDialog(false)
+              }}
+            >
+              Envoyer le PDF
+            </Button>
+            <Button
+              className='bg-secondary rounded-2xl cursor-pointer'
+              onClick={() => setShowDialog(false)}
+            >
+              Supprimer le PDF
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   if (showForm) {
     return (
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className='bg-white rounded-2xl'>
-          <DialogTitle className='font-bold text-2xl text-secondary text-center'>
-            Envoyez votre PDF
+        <DialogOverlay className='bg-slate-50 fixed inset-0 z-50 backdrop-blur-sm' />
+        <DialogContent className='bg-white rounded-2xl flex flex-col pt-10'>
+          <DialogTitle className='font-bold text-2xl text-secondary text-center mb-6'>
+            Envoyer votre PDF
           </DialogTitle>
-          <EmailForm onClose={() => setShowForm(true)} />
+          <EmailForm onClose={() => setShowForm(false)} />
         </DialogContent>
       </Dialog>
     )
@@ -63,7 +103,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
   }
 
   return (
-    <>
+    <div className='flex-1'>
       <div className='mb-8 px-4 md:w-4/5 mx-auto'>
         <div className='flex items-center gap-2 justify-center mb-4'>
           <Image src='/pdf.png' width={40} height={40} alt='mes documents' />{" "}
@@ -73,11 +113,11 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
           Retrouvez ici tous les documents que vous avez téléchargés
         </p>
       </div>
-      <div className='flex flex-col items-center justify-start text-center pb-10 flex-1 gap-20'>
+      <div className='flex flex-col items-center justify-start text-center'>
         <DocumentFilterSelect filter={filter} setFilter={setFilter} />
       </div>
-      {/* Desktop version */}
-      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary'>
+      {/* Docs Table Desktop version */}
+      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary mt-2 mx-4 transition-all duration-300 ease-in-out'>
         <table className='min-w-full divide-y divide-gray-200'>
           <thead className='bg-gray-50 sticky top-0'>
             <tr>
@@ -107,7 +147,20 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
               document.history?.map((history, index: number) => (
                 <tr
                   key={`${document.id}-${history.id}`}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                  className={`cursor-pointer  hover:bg-secondary ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                  }`}
+                  onClick={() => {
+                    if (history.action === DOCUMENT_DOWNLOADED) {
+                      setDocument({
+                        name: document.name,
+                        type: document.type,
+                        filePath: document.url,
+                      })
+
+                      setShowDialog(true)
+                    }
+                  }}
                 >
                   {index === 0 ? (
                     <td
@@ -116,7 +169,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                     >
                       <a
                         href={document.url}
-                        className='text-secondary hover:underline hover:text-sky-800 transform duration-300 ease-in-out'
+                        className='text-primary hover:underline hover:text-sky-800 transform duration-300 ease-in-out'
                         target='_blank'
                         rel='noopener noreferrer'
                       >
@@ -130,9 +183,6 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                   <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-500'>
                     {history.recipient}
                   </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-500'>
-                    <DeleteDocument documentId={document.id} />
-                  </td>
                 </tr>
               ))
             )}
@@ -140,7 +190,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
         </table>
       </div>
       {/* Mobile version (cards) */}
-      <div className='md:hidden space-y-4 px-4'>
+      <div className='md:hidden space-y-4 px-4 mt-2'>
         {filteredDocuments.map((document) => (
           <div
             key={document.id}
@@ -149,7 +199,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
             <div className='mb-3'>
               <a
                 href={document.url}
-                className='text-lg font-medium text-secondary hover:underline hover:text-sky-800 transform duration-300 ease-in-out'
+                className='text-lg font-medium text-primary hover:underline hover:text-sky-800 transform duration-300 ease-in-out'
                 target='_blank'
                 rel='noopener noreferrer'
               >
@@ -169,7 +219,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                       filePath: document.url,
                     })
 
-                    setShowForm(true)
+                    setShowDialog(true)
                   }
                 }}
               >
@@ -188,7 +238,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                   </span>
                 </div>
                 <div className='flex justify-between'>
-                  <span className='font-medium'>Destinataire:</span>
+                  <span className='font-medium'>à :</span>
                   <span className='underline'>
                     {history.recipient || "N/A"}
                   </span>
@@ -207,6 +257,6 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
           </div>
         ))}
       </div>
-    </>
+    </div>
   )
 }

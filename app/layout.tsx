@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  title: "Smart Docs",
+  title: "Clever Docs",
   description: "Gestion intelligente des documents",
   manifest: "/manifest.json",
   icons: [

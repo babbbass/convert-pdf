@@ -11,7 +11,7 @@ export function DocumentFilterSelect({
   ) => void
 }) {
   return (
-    <div className='flex justify-center gap-4 mb-6'>
+    <div className='flex justify-center gap-4 mb-6 px-4'>
       <button
         onClick={() => setFilter(ACCOUNTANT)}
         className={`px-4 py-2 rounded-2xl cursor-pointer ${

@@ -13,7 +13,7 @@ export function Logo() {
           className='rounded-2xl mr-2'
         />
         <p className='text-xl md:text-3xl italic font-bold text-primary text-center md:text-left'>
-          SmartDocs
+          CleverDocs
         </p>
       </Link>
     </>
