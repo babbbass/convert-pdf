@@ -245,14 +245,14 @@ export default function Home() {
   return (
     <div className=' px-4 pb-2 flex-1'>
       <div className='max-w-4xl mx-auto space-y-8 mb-12'>
-        <div className='text-sm md:text-lg text-center space-y-4'>
-          <h1 className='text-3xl md:text-4xl font-bold tracking-tight text-primary mb-4'>
-            Gagnez du temps sur votre comptabilité
+        <div className='text-base md:text-lg text-center space-y-4'>
+          <h1 className='text-2xl md:text-4xl font-bold tracking-tight text-primary mb-4'>
+            {`Comptabilité 10x plus rapide : concentrez-vous sur l'essentiel !`}
           </h1>
           <p className='font-medium text-secondary'>
-            Convertissez vos factures et Envoyez-les en 2 clics
+            Envoyez vos factures en 2 clics !
           </p>
-          <ul className='flex flex-col md:flex-row gap-1 items-start md:justify-center px-2 md:gap-2'>
+          <ul className='flex flex-col md:flex-row gap-1 items-start md:justify-center px-2 md:gap-2 text-sm md:text-base'>
             <li>✅ Cryptage sécurisé</li>
             <li>🔄 Intégration QuickBooks</li>
             <li>⏱️ 3x plus rapide</li>

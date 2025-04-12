@@ -9,7 +9,6 @@ import {
   INVOICE_CUSTOMER,
   ACCOUNTANT,
   DOCUMENT_SENT,
-  DOCUMENT_DOWNLOADED,
 } from "@/lib/constants"
 import { Document } from "@/lib/types"
 import { useGlobalStore } from "@/stores/globalStore"
@@ -18,35 +17,32 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogTrigger,
   DialogOverlay,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 export function DocumentFilter({ documents }: { documents: Document[] }) {
-  const { setDocument } = useGlobalStore()
+  const { setDocument, document } = useGlobalStore()
   const router = useRouter()
   const [filter, setFilter] = useState<
     typeof ACCOUNTANT | typeof INVOICE_CUSTOMER | typeof COSTS
   >(ACCOUNTANT)
   const [showDialog, setShowDialog] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [, setStatusFile] = useState<null | string>(null)
   const filteredDocuments = documents.filter((doc) => {
     if (filter === ACCOUNTANT) return true
     return doc.type === filter
   })
-
   if (showDialog) {
     return (
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogOverlay className='bg-slate-50 fixed inset-0 z-50 backdrop-blur-sm' />
-        <DialogTrigger></DialogTrigger>
         <DialogContent className='bg-white rounded-2xl flex flex-col pt-10'>
-          <DialogTitle className='font-bold text-2xl text-primary text-center mb-6'>
-            Action sur votre PDF
+          <DialogTitle className='font-bold text-xl md:text-2xl text-primary text-center mb-6'>
+            <span className='text-primary underline'>{document?.name}</span>
           </DialogTitle>
-          <div className='flex w-full justify-around text-slate-50'>
-            {/* <EmailForm onClose={() => setShowForm(true)} /> */}
+          <div className='flex flex-col gap-3 md:flex-row w-full justify-around text-slate-50'>
             <Button
               className='bg-green-600 rounded-2xl cursor-pointer'
               onClick={() => {
@@ -60,7 +56,17 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
               className='bg-secondary rounded-2xl cursor-pointer'
               onClick={() => setShowDialog(false)}
             >
-              Supprimer le PDF
+              <a href={document?.filePath} target='_blank'>
+                Voir le PDF
+              </a>
+            </Button>
+            <Button
+              className='bg-red-700 rounded-2xl cursor-pointer hover:bg-red-500'
+              onClick={() => {
+                setShowDialog(false)
+              }}
+            >
+              <DeleteDocument documentId={document?.id} />
             </Button>
           </div>
         </DialogContent>
@@ -154,19 +160,19 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
               document.history?.map((history, index: number) => (
                 <tr
                   key={`${document.id}-${history.id}`}
-                  className={`cursor-pointer  hover:bg-secondary ${
+                  className={`cursor-pointer  hover:bg-secondary hover:text-slate-50 transition-all duration-300 ease-in-out ${
                     index % 2 === 0 ? "bg-white" : "bg-gray-100"
                   }`}
                   onClick={() => {
-                    if (history.action === DOCUMENT_DOWNLOADED) {
-                      setDocument({
-                        name: document.name,
-                        type: document.type,
-                        filePath: document.url,
-                      })
+                    setDocument({
+                      id: document.id,
+                      name: document.name,
+                      type: document.type,
+                      filePath: document.url,
+                    })
 
-                      setShowDialog(true)
-                    }
+                    setShowDialog(true)
+                    setStatusFile(history.action)
                   }}
                 >
                   {index === 0 ? (
@@ -219,15 +225,14 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                 key={history.id}
                 className='mb-2 last:mb-0 pb-2 border-b last:border-b-0'
                 onClick={() => {
-                  if (history.action === DOCUMENT_DOWNLOADED) {
-                    setDocument({
-                      name: document.name,
-                      type: document.type,
-                      filePath: document.url,
-                    })
+                  setDocument({
+                    id: document.id,
+                    name: document.name,
+                    type: document.type,
+                    filePath: document.url,
+                  })
 
-                    setShowDialog(true)
-                  }
+                  setShowDialog(true)
                 }}
               >
                 <div className='flex justify-between'>
@@ -255,9 +260,6 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                   <span>
                     {new Date(history.timestamp).toLocaleDateString()}
                   </span>
-                </div>
-                <div className='flex justify-end mt-4'>
-                  <DeleteDocument documentId={document.id} />
                 </div>
               </div>
             ))}

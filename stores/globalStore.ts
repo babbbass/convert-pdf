@@ -3,11 +3,13 @@ import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 
 type GlobalStore = {
   document: {
+    id?: string
     name: string
     type: typeof COSTS | typeof INVOICE_CUSTOMER | typeof ACCOUNTANT
     filePath?: string
   } | null
   setDocument: (document: {
+    id?: string
     name: string
     type: typeof COSTS | typeof INVOICE_CUSTOMER | typeof ACCOUNTANT
     filePath?: string
