@@ -132,36 +132,36 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
       {/* Docs Table Desktop version */}
       <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary mt-2 mx-4 transition-all duration-300 ease-in-out'>
         <table className='min-w-full divide-y divide-gray-200'>
-          <thead className='bg-gray-50 sticky top-0'>
+          <thead className='bg-gray-50 sticky top-0 text-primary'>
             <tr>
               <th
                 scope='col'
-                className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                className='px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider'
               >
                 Document
               </th>
               <th
                 scope='col'
-                className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
               >
                 Statut
               </th>
 
               <th
                 scope='col'
-                className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'
+                className='px-6 py-3 text-left text-xs font-medium uppercase tracking-wider'
               >
                 Destinataire
               </th>
             </tr>
           </thead>
           <tbody className='bg-white divide-y divide-gray-200'>
-            {filteredDocuments.map((document) =>
+            {filteredDocuments.map((document, numLine: number) =>
               document.history?.map((history, index: number) => (
                 <tr
                   key={`${document.id}-${history.id}`}
-                  className={`cursor-pointer  hover:bg-secondary hover:text-slate-50 transition-all duration-300 ease-in-out ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                  className={`cursor-pointer text-slate-500 text-sm hover:bg-secondary hover:text-slate-50 transition-all duration-300 ease-in-out ${
+                    numLine % 2 === 0 ? "bg-white" : "bg-gray-100"
                   }`}
                   onClick={() => {
                     setDocument({
@@ -190,10 +190,10 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                       </a>
                     </td>
                   ) : null}
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-500'>
+                  <td className='px-6 py-4 whitespace-nowrap'>
                     {history.action === DOCUMENT_SENT ? "Envoyé" : "Téléchargé"}
                   </td>
-                  <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-500'>
+                  <td className='px-6 py-4 whitespace-nowrap'>
                     {history.recipient}
                   </td>
                 </tr>
