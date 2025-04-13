@@ -1,4 +1,4 @@
-const CACHE_NAME = "smart-docs-cache-v1"
+const CACHE_NAME = "clever-docs-cache-v1"
 const urlsToCache = ["/", "/offline.html", "/icons/icon-192x192.png"]
 
 self.addEventListener("install", (event) => {

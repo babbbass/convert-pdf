@@ -22,7 +22,7 @@ export function Footer() {
         </div>
       </section>
       <section className='text-sm'>
-        © 2025 SmartDocs by PDF Technologies, pixeloft Company.
+        © 2025 CleverDocs by PDF Technologies, pixeloft Company.
       </section>
     </footer>
   )
