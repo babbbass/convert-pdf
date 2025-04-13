@@ -278,7 +278,7 @@ export default function Home() {
                   <DisplayDocumentButton
                     isShowDialog={setIsDialogOpen}
                     documentUrl={document?.filePath}
-                    className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-colors duration-300 hover:border-secondary/80'
+                    className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-colors duration-300 hover:border-secondary/80 text-2xl'
                   />
                 </div>
               ) : (
