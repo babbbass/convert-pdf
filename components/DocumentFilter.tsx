@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Send, FileDown } from "lucide-react"
+import { Send, FileDown, Mail } from "lucide-react"
 import { DeleteDocument } from "@/components/DeleteDocument"
 import Image from "next/image"
 import { DocumentFilterSelect } from "@/components/DocumentFilterSelect"
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { DisplayDocumentButton } from "./DisplayDocumentButton"
 export function DocumentFilter({ documents }: { documents: Document[] }) {
   const { setDocument, document } = useGlobalStore()
   const router = useRouter()
@@ -39,29 +40,26 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogOverlay className='bg-slate-50 fixed inset-0 z-50 backdrop-blur-sm' />
         <DialogContent className='bg-white rounded-2xl flex flex-col pt-10'>
-          <DialogTitle className='font-bold text-xl md:text-2xl text-primary text-center mb-6'>
-            <span className='text-primary underline'>{document?.name}</span>
+          <DialogTitle className='font-bold text-xl md:text-2xl text-primary text-center mb-10'>
+            <span className='text-primary italic'>{document?.name}</span>
           </DialogTitle>
-          <div className='flex flex-col gap-3 md:flex-row w-full justify-around text-slate-50'>
+          <div className='flex flex-col gap-4 md:flex-row w-full justify-between text-slate-50'>
             <Button
-              className='bg-green-600 hover:bg-green-600/80 rounded-2xl cursor-pointer'
+              className='bg-green-600 hover:bg-green-600/80 rounded-2xl cursor-pointer font-semibold'
               onClick={() => {
                 setShowForm(true)
                 setShowDialog(false)
               }}
             >
-              Envoyer le PDF
+              <Mail className='mr-1 h-5 w-5' />
+              Envoyer
             </Button>
-            <Button
-              className='bg-secondary rounded-2xl cursor-pointer hover:bg-secondary/80'
-              onClick={() => setShowDialog(false)}
-            >
-              <a href={document?.filePath} target='_blank'>
-                Voir le PDF
-              </a>
-            </Button>
+            <DisplayDocumentButton
+              isShowDialog={setShowDialog}
+              documentUrl={document?.filePath}
+            />
             <div
-              className='font-bold px-4 py-2 gap-2 bg-red-700 rounded-2xl cursor-pointer hover:bg-red-500'
+              className='font-semibold px-4 py-2 bg-red-700 rounded-2xl cursor-pointer hover:bg-red-700/80 whitespace-nowrap overflow-hidden text-ellipsis items-center justify-center flex'
               onClick={() => {
                 setShowDialog(false)
               }}

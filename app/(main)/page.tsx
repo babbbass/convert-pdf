@@ -14,9 +14,10 @@ import { useGlobalStore } from "@/stores/globalStore"
 import { storeDocument } from "@/lib/storeDocument"
 import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 import { Questions } from "@/components/Questions"
+import { DisplayDocumentButton } from "@/components/DisplayDocumentButton"
 
 export default function Home() {
-  const { setDocument } = useGlobalStore()
+  const { document, setDocument } = useGlobalStore()
   const worker = useTesseract()
   const [images, setImages] = useState<
     Array<{ id: string; file: File; preview: string }>
@@ -269,10 +270,15 @@ export default function Home() {
           {images.length > 0 && (
             <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
               {isGenerated ? (
-                <div className='flex justify-center w-5/6'>
+                <div className='flex flex-col gap-3 items-center justify-center w-5/6'>
                   <SendEmailTrigger
                     isOpen={isDialogOpen}
                     setIsDialogOpen={setIsDialogOpen}
+                  />
+                  <DisplayDocumentButton
+                    isShowDialog={setIsDialogOpen}
+                    documentUrl={document?.filePath}
+                    className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-colors duration-300 hover:border-secondary/80'
                   />
                 </div>
               ) : (

@@ -13,7 +13,7 @@ export function DeleteDocument({
       className='flex gap-2 items-center text-sm text-error cursor-pointer'
     >
       <Trash className='h-5 w-5 ' />
-      Supprimer le PDF
+      Supprimer
     </button>
   )
 }
