@@ -57,7 +57,7 @@ export function EmailForm({ onClose }: { onClose: () => void }) {
     try {
       setIsLoading(true)
       const formData = new FormData()
-      formData.append("to", values.to)
+      formData.append("to", values.to.toLowerCase())
       formData.append("subject", values.subject)
       formData.append("message", values.message)
       formData.append("filePath", document?.filePath || "")
