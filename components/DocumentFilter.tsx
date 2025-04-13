@@ -44,7 +44,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
           </DialogTitle>
           <div className='flex flex-col gap-3 md:flex-row w-full justify-around text-slate-50'>
             <Button
-              className='bg-green-600 rounded-2xl cursor-pointer'
+              className='bg-green-600 hover:bg-green-600/80 rounded-2xl cursor-pointer'
               onClick={() => {
                 setShowForm(true)
                 setShowDialog(false)
@@ -53,21 +53,21 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
               Envoyer le PDF
             </Button>
             <Button
-              className='bg-secondary rounded-2xl cursor-pointer'
+              className='bg-secondary rounded-2xl cursor-pointer hover:bg-secondary/80'
               onClick={() => setShowDialog(false)}
             >
               <a href={document?.filePath} target='_blank'>
                 Voir le PDF
               </a>
             </Button>
-            <Button
-              className='bg-red-700 rounded-2xl cursor-pointer hover:bg-red-500'
+            <div
+              className='font-bold px-4 py-2 gap-2 bg-red-700 rounded-2xl cursor-pointer hover:bg-red-500'
               onClick={() => {
                 setShowDialog(false)
               }}
             >
               <DeleteDocument documentId={document?.id} />
-            </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -180,14 +180,14 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
                       rowSpan={document.history?.length}
                       className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r border-gray-200'
                     >
-                      <a
+                      {/* <a
                         href={document.url}
                         className='text-primary hover:underline hover:text-sky-800 transform duration-300 ease-in-out'
                         target='_blank'
                         rel='noopener noreferrer'
-                      >
-                        {document.name}
-                      </a>
+                      > */}
+                      {document.name}
+                      {/* </a> */}
                     </td>
                   ) : null}
                   <td className='px-6 py-4 whitespace-nowrap'>

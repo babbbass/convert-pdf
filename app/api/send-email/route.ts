@@ -25,12 +25,13 @@ export async function POST(req: Request) {
         { status: 400 }
       )
     }
+
     const mailgun = new Mailgun(formData)
     const client = mailgun.client({
       username: "api",
       key: process.env.MAILGUN_API_KEY!,
       url:
-        process.env.NEXT_PUBLIC_NODE_ENV === "production"
+        process.env.NODE_ENV === "production"
           ? "https://api.eu.mailgun.net"
           : "",
     })
