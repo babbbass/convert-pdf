@@ -45,7 +45,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
           </DialogTitle>
           <div className='flex flex-col gap-4 md:flex-row w-full justify-between text-slate-50'>
             <Button
-              className='bg-green-600 hover:bg-green-600/80 rounded-2xl cursor-pointer font-semibold'
+              className='bg-green-600 hover:bg-green-600/80 rounded-2xl cursor-pointer font-medium'
               onClick={() => {
                 setShowForm(true)
                 setShowDialog(false)
@@ -57,9 +57,10 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
             <DisplayDocumentButton
               isShowDialog={setShowDialog}
               documentUrl={document?.filePath}
+              className='text-sm font-medium'
             />
             <div
-              className='font-semibold px-4 py-2 bg-red-700 rounded-2xl cursor-pointer hover:bg-red-700/80 whitespace-nowrap overflow-hidden text-ellipsis items-center justify-center flex'
+              className='font-medium px-4 py-2 bg-red-700 rounded-2xl cursor-pointer hover:bg-red-700/80 whitespace-nowrap overflow-hidden text-ellipsis items-center justify-center flex'
               onClick={() => {
                 setShowDialog(false)
               }}

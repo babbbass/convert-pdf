@@ -10,7 +10,7 @@ export function DisplayDocumentButton({
 }) {
   return (
     <div
-      className={`flex items-center justify-center gap-2 font-semibold px-4 py-2 text-sm bg-secondary rounded-2xl cursor-pointer hover:bg-secondary/80 ${className}`}
+      className={`flex items-center justify-center gap-2 px-4 py-2 bg-secondary rounded-2xl cursor-pointer hover:bg-secondary/80 ${className}`}
       onClick={() => isShowDialog(false)}
     >
       <a

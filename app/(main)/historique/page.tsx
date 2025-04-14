@@ -10,19 +10,34 @@ export default async function Page() {
 
   if (!user) return null
 
-  const dbUser = await prisma.user.findUnique({
-    where: { clerkUserId: user.id },
-  })
-  const documents = await prisma.document.findMany({
-    where: { userId: dbUser?.id },
-    include: {
-      history: {
-        orderBy: {
-          timestamp: "desc",
+  const [, documents] = await Promise.all([
+    prisma.user.findUnique({
+      where: { clerkUserId: user.id },
+      select: { id: true },
+    }),
+    prisma.document.findMany({
+      where: {
+        userId: (
+          await prisma.user.findUnique({
+            where: { clerkUserId: user.id },
+            select: { id: true },
+          })
+        )?.id,
+      },
+      include: {
+        history: {
+          orderBy: {
+            timestamp: "asc",
+          },
+          select: {
+            id: true,
+            timestamp: true,
+            action: true,
+          },
         },
       },
-    },
-  })
+    }),
+  ])
 
   if (documents.length === 0) {
     return (
@@ -46,6 +61,7 @@ export default async function Page() {
       </div>
     )
   }
+
   // @ts-expect-error "typage"
   return <DocumentFilter documents={documents} />
 }

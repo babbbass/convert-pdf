@@ -278,7 +278,7 @@ export default function Home() {
                   <DisplayDocumentButton
                     isShowDialog={setIsDialogOpen}
                     documentUrl={document?.filePath}
-                    className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-colors duration-300 hover:border-secondary/80 text-2xl'
+                    className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-colors duration-300 hover:border-secondary/80'
                   />
                 </div>
               ) : (
@@ -288,7 +288,7 @@ export default function Home() {
                   className='w-5/6 py-4 rounded-2xl font-medium text-card-foreground 
                 hover:bg-sky-500 transition-all duration-300
                 disabled:opacity-50 disabled:cursor-not-allowed
-                flex items-center justify-center gap-2 bg-sky-400 cursor-pointer'
+                flex items-center justify-center gap-2 bg-secondary cursor-pointer'
                 >
                   {isGenerating ? (
                     <>

@@ -1,7 +1,9 @@
 import { Wrapper } from "@/components/Wrapper"
 import { currentUser } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
-import Providers from "./providers"
+// import Providers from "./providers"
+import { Suspense } from "react"
+import { Loading } from "@/components/Loading"
 
 export default async function RootLayout({
   children,
@@ -28,7 +30,7 @@ export default async function RootLayout({
   }
   return (
     <Wrapper>
-      <Providers>{children}</Providers>
+      <Suspense fallback={<Loading />}>{children}</Suspense>
     </Wrapper>
   )
 }
