@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { Footer } from "@/components/Footer"
-import { Logo } from "@/components/Logo"
 import Link from "next/link"
 
 const FEATURES = [
@@ -48,14 +47,6 @@ const PRICING_PLANS = [
 export default function LandingPage() {
   return (
     <main className='min-h-screen bg-white text-gray-800 px-4 py-8 sm:px-6 sm:py-12'>
-      <header className='flex bg-slate-50 border-b items-center justify-between md:text-2xl min-h-20 w-full p-2 px-4 sticky top-0 mb-10 gap-4 border-slate-200'>
-        <section className='flex flex-col gap-1'>
-          <Logo />
-          <p className='text-sm text-secondary font-medium italic'>
-            Gestion intelligente des documents
-          </p>
-        </section>
-      </header>
       {/* Hero Section */}
       <section className='max-w-5xl mx-auto text-center space-y-6'>
         <motion.h1
@@ -74,7 +65,7 @@ export default function LandingPage() {
           transition={{ delay: 0.2, duration: 0.6 }}
         >
           Convertissez vos photos en PDF, classez-les automatiquement et
-          envoyez-les à votre comptable en 1 clic.
+          envoyez-les à votre comptable en 2 clic.
         </motion.p>
 
         <motion.div
@@ -173,8 +164,8 @@ export default function LandingPage() {
                       size='lg'
                       className={`w-full mt-6 ${
                         plan.featured
-                          ? ""
-                          : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                          ? "cursor-pointer"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer"
                       }`}
                     >
                       {plan.featured ? "Commencer" : "Essayer"}
