@@ -21,7 +21,7 @@ export async function extractTextFromPdf(
     // onProgress = () => {},
   } = options
 
-  // Convertir file in arrayBuffer if necessary
+  // Convert file in arrayBuffer if necessary
   const arrayBuffer =
     pdfFile instanceof File ? await pdfFile.arrayBuffer() : pdfFile
 
@@ -74,10 +74,6 @@ export async function extractTextFromPdf(
   return fullText.trim()
 }
 
-/**
- * Version serveur de l'extraction de texte (utilise uniquement pdf.js)
- * Cette fonction n'utilise pas l'OCR mais extrait le texte directement du PDF s'il est disponible
- */
 export async function extractTextFromPdfServer(
   pdfBuffer: Buffer,
   options: {
@@ -86,7 +82,6 @@ export async function extractTextFromPdfServer(
 ): Promise<string> {
   const { pageRange = { start: 1 } } = options
 
-  // Charger le document PDF
   const loadingTask = pdfjs.getDocument({ data: pdfBuffer })
   const pdf = await loadingTask.promise
 
@@ -98,15 +93,12 @@ export async function extractTextFromPdfServer(
 
   let fullText = ""
 
-  // Traiter chaque page
   for (let pageNum = startPage; pageNum <= endPage; pageNum++) {
-    // Obtenir la page
     const page = await pdf.getPage(pageNum)
 
-    // Extraire le contenu textuel
     const content = await page.getTextContent()
 
-    // Concaténer le texte
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pageText = content.items.map((item: any) => item.str).join(" ")
 
     fullText += pageText + "\n\n"

@@ -6,7 +6,7 @@ import { PDFDocument } from "pdf-lib"
 import { toast } from "sonner"
 import { reorderedItem } from "@/lib/types"
 import { SendEmailTrigger } from "@/components/SendEmailTrigger"
-// import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
+import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
 import { FileText, Loader2 } from "lucide-react"
 import { useTesseract } from "@/hooks/useTesseract"
 import { formatDateOfDay } from "@/lib/date"
@@ -69,18 +69,18 @@ export default function Home() {
     return Math.min(scaleFactor, 1)
   }
 
-  // async function classifyDocument(textOfDocument: string) {
-  //   const res = await fetch("/api/classifyInvoice", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ text: textOfDocument }),
-  //   })
+  async function classifyDocument(textOfDocument: string) {
+    const res = await fetch("/api/classifyInvoice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: textOfDocument }),
+    })
 
-  //   const data = await res.json()
-  //   return data
-  // }
+    const data = await res.json()
+    return data
+  }
   // async function extractText(imagePath: string) {
   //   if (!imagePath || typeof imagePath !== "string") {
   //     return
@@ -108,12 +108,12 @@ export default function Home() {
     return documentName
   }
   async function generatePdf(document: File | Uint8Array<ArrayBufferLike>) {
-    // let textOfDocument: string | undefined = ""
+    let textOfDocument: string | undefined = ""
     try {
       if (!worker) {
         throw new Error("OCR not initialized")
       }
-      // textOfDocument = await extractTextFromPdf(document, worker)
+      textOfDocument = await extractTextFromPdf(document, worker)
       // console.log(textOfDocument)
     } catch (error) {
       console.error(error)
@@ -130,8 +130,8 @@ export default function Home() {
       )
     }
 
-    //const { classification } = await classifyDocument(textOfDocument)
-    const classification = "2"
+    const { classification } = await classifyDocument(textOfDocument)
+    //const classification = "2"
     const documentType = generateTypeDocument(Number(classification))
     const documentName = generateNameDocument(documentType)
     const docStored = await storeDocument(

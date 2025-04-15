@@ -2,9 +2,8 @@ import { ChatOpenAI } from "@langchain/openai"
 import { PromptTemplate } from "@langchain/core/prompts"
 import { NextResponse } from "next/server"
 
-// Instancier OpenAI
 const model = new ChatOpenAI({
-  modelName: "gpt-3.5-turbo",
+  modelName: "gpt-4.1-mini",
   temperature: 0,
   openAIApiKey: process.env.OPENAI_API_KEY,
 })
@@ -25,7 +24,8 @@ Voici le document à analyser :
     "{text}"  
 
 Réponds uniquement avec **"1"** si c'est une facture client, ou **"0"** si c'est un frais.  
-Ne donne **aucune autre explication**.  
+Ne donne **aucune autre explication**. 
+Si tu n'arrives pas à classer le document, donne **"2".** 
 `,
     inputVariables: ["text"],
   })
