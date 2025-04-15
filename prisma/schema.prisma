@@ -17,6 +17,7 @@ model User {
   profileImageUrl     String?
   documents           Document[] 
   sentHistories       History[]   @relation("senderHistories")
+  subscription        Subscription?
   createdAt           DateTime    @default(now())
   updatedAt           DateTime    @updatedAt
 }
@@ -47,3 +48,28 @@ enum ActionType {
   SENT      
   DOWNLOADED 
 }
+
+model Subscription {
+  id                String     @id @default(uuid())
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String     @unique
+
+  status            String     // active, trialing, cancelled, etc.
+  isActive          Boolean    @default(false)
+  trialEndsAt       DateTime?
+  currentPeriodEnd  DateTime?
+  lemonsqueezyId    String     // LemonSqueezy ID (subscription_id)
+  
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INCOMPLETE
+  TRIALING
+  CANCELED
+  EXPIRED
+  PAST_DUE
+}
+
