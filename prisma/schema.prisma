@@ -26,7 +26,7 @@ model Document {
   name        String        
   url         String  
   type        String        @default("Document_Comptable")      
-  user        User          @relation(fields: [userId], references: [id])
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   history     History[]     
   createdAt   DateTime      @default(now())
@@ -36,7 +36,7 @@ model History {
   id          String    @id @default(uuid()) 
   document    Document  @relation(fields: [documentId], references: [id])
   documentId  String
-  sender      User      @relation(fields: [senderId], references: [id], name:"senderHistories")
+  sender      User      @relation(fields: [senderId], references: [id], name:"senderHistories", onDelete: Cascade)
   senderId    String
   recipient   String    
   action      ActionType
