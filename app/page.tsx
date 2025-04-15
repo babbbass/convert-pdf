@@ -5,6 +5,7 @@ import { CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { Footer } from "@/components/Footer"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const FEATURES = [
   {
@@ -45,6 +46,7 @@ const PRICING_PLANS = [
 ] as const
 
 export default function LandingPage() {
+  const router = useRouter()
   return (
     <main className='min-h-screen bg-white text-gray-800 px-4 py-8 sm:px-6 sm:py-12'>
       {/* Hero Section */}
@@ -77,7 +79,7 @@ export default function LandingPage() {
             size='lg'
             className='text-lg rounded-2xl shadow-lg hover:shadow-xl transition-shadow bg-secondary text-slate-50 hover:bg-secondary/90 cursor-pointer'
           >
-            <Link href={"/"}>Essayez gratuitement</Link>
+            <Link href={"/accueil"}>Essayez gratuitement</Link>
           </Button>
         </motion.div>
       </section>
@@ -141,6 +143,9 @@ export default function LandingPage() {
                   className={`h-full rounded-2xl cursor-pointer ${
                     plan.featured ? "ring-2 ring-primary" : ""
                   }`}
+                  onClick={() => {
+                    router.push("/accueil")
+                  }}
                 >
                   <CardHeader>
                     <CardTitle className='text-2xl font-bold'>
@@ -174,10 +179,11 @@ export default function LandingPage() {
                           //     .then((data) => {
                           //       if (data?.url) window.location.href = data.url
                           //     })
-                          window.location.href = process.env
-                            .NEXT_PUBLIC_LEMONSQUEEZY_CHECKOUT as string
+                          // window.location.href = process.env
+                          //   .NEXT_PUBLIC_LEMONSQUEEZY_CHECKOUT as string
+                          window.location.href = "/accueil"
                         } else {
-                          window.location.href = "/"
+                          window.location.href = "/accueil"
                         }
                       }}
                     >
