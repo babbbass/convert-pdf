@@ -44,7 +44,11 @@ export function Dropdown() {
           </div>
           <p className='w-5/6 text-primary text-lg font-medium text-center mt-4 border-b pb-2 border-slate-200'></p>
           <div className='flex flex-col gap-5 mt-2 items-start w-5/6 px-2 py-4 text-primary'>
-            <Link href={"/"} onClick={() => setIsOpen(false)} className='flex'>
+            <Link
+              href={"/accueil"}
+              onClick={() => setIsOpen(false)}
+              className='flex'
+            >
               <House className='mr-2 h-5 w-5' /> Accueil
             </Link>
             <Link

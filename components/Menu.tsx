@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "./ui/button"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, House } from "lucide-react"
 import Link from "next/link"
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { Dropdown } from "./Dropdown"
@@ -19,6 +19,12 @@ export const Menu = () => {
           {/* <SignUpButton /> */}
         </SignedOut>
         <SignedIn>
+          <Link
+            href={"/accueil"}
+            className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'
+          >
+            <House className='mr-1 h-4 w-4' /> Home
+          </Link>
           <Link
             href={"/historique"}
             className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'

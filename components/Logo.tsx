@@ -4,7 +4,7 @@ import Image from "next/image"
 export function Logo() {
   return (
     <>
-      <Link href={"/"} className='flex items-center'>
+      <Link href={"/accueil"} className='flex items-center'>
         <Image
           src='/logo.png'
           alt='logo'
