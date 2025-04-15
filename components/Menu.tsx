@@ -21,13 +21,14 @@ export const Menu = () => {
         <SignedIn>
           <Link
             href={"/accueil"}
-            className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'
+            className='items-center hidden md:inline-flex bg-transparent border-0 text-primary text-sm hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'
           >
             <House className='mr-1 h-4 w-4' /> Home
           </Link>
           <Link
             href={"/historique"}
-            className='items-center hidden md:inline-flex bg-transparent border-0 text-secondary text-sm font-medium hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'
+            className='items-center hidden md:inline-flex bg-transparent border-0 text-primary text-sm 
+             hover:underline hover:cursor-pointer transition-all duration-300 rounded-2xl'
           >
             Historique
           </Link>
