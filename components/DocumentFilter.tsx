@@ -35,6 +35,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
     if (filter === ACCOUNTANT) return true
     return doc.type === filter
   })
+
   if (showDialog) {
     return (
       <Dialog open={showDialog} onOpenChange={setShowDialog}>

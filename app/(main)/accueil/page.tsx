@@ -15,6 +15,7 @@ import { storeDocument } from "@/lib/storeDocument"
 import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 import { Questions } from "@/components/Questions"
 import { DisplayDocumentButton } from "@/components/DisplayDocumentButton"
+import Image from "next/image"
 
 export default function Home() {
   const { document, setDocument } = useGlobalStore()
@@ -114,7 +115,6 @@ export default function Home() {
         throw new Error("OCR not initialized")
       }
       textOfDocument = await extractTextFromPdf(document, worker)
-      // console.log(textOfDocument)
     } catch (error) {
       console.error(error)
       toast(
@@ -148,6 +148,7 @@ export default function Home() {
       type: documentType,
       filePath: docStored.filePath,
     })
+    setImages([])
     setIsGenerated(true)
   }
 
@@ -272,44 +273,62 @@ export default function Home() {
             onRemove={handleRemove}
           />
 
-          {images.length > 0 && (
-            <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
-              {isGenerated ? (
-                <div className='flex flex-col gap-3 items-center justify-center w-5/6'>
-                  <SendEmailTrigger
-                    isOpen={isDialogOpen}
-                    setIsDialogOpen={setIsDialogOpen}
+          <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
+            {isGenerated && (
+              <div className='flex flex-col gap-3 items-center justify-center w-5/6'>
+                <h3 className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'>
+                  <Image
+                    src='/pdf.png'
+                    width={40}
+                    height={40}
+                    alt='mes documents'
                   />
-                  <DisplayDocumentButton
-                    isShowDialog={setIsDialogOpen}
-                    documentUrl={document?.filePath}
-                    className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-colors duration-300 hover:border-secondary/80'
-                  />
+                  {document?.name}
+                </h3>
+                <DisplayDocumentButton
+                  isShowDialog={setIsDialogOpen}
+                  documentUrl={document?.filePath}
+                  className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-all duration-300 hover:border-secondary/80'
+                />
+                <SendEmailTrigger
+                  isOpen={isDialogOpen}
+                  setIsDialogOpen={setIsDialogOpen}
+                />
+                <div
+                  className='flex items-center justify-center w-full bg-primary text-slate-50 px-6 py-4 cursor-pointer border border-primary rounded-2xl font-medium hover:bg-primary/80 hover:text-slate-50 transition-all duration-300 hover:border-primary/80'
+                  onClick={() => {
+                    setImages([])
+                    setIsGenerated(false)
+                  }}
+                >
+                  {" "}
+                  Reintialiser
                 </div>
-              ) : (
-                <button
-                  onClick={handleFiles}
-                  disabled={isGenerating}
-                  className='w-5/6 py-4 rounded-2xl font-medium text-card-foreground 
+              </div>
+            )}
+            {images.length > 0 && (
+              <button
+                onClick={handleFiles}
+                disabled={isGenerating}
+                className='w-5/6 py-4 rounded-2xl font-medium text-card-foreground 
                 hover:bg-sky-500 transition-all duration-300
                 disabled:opacity-50 disabled:cursor-not-allowed
                 flex items-center justify-center gap-2 bg-secondary cursor-pointer'
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className='w-5 h-5 animate-spin' />
-                      PDF en création...
-                    </>
-                  ) : (
-                    <>
-                      <FileText className='w-5 h-5' />
-                      Generer le PDF
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-          )}
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className='w-5 h-5 animate-spin' />
+                    PDF en création...
+                  </>
+                ) : (
+                  <>
+                    <FileText className='w-5 h-5' />
+                    Generer le PDF
+                  </>
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
       <Questions />
