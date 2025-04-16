@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
       data: {
         name: file.name,
         url: url,
+        type: targetFolder,
         user: { connect: { id: user.id } },
         history: {
           create: {
