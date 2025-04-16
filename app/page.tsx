@@ -66,8 +66,7 @@ export default function LandingPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          Convertissez vos photos en PDF, classez-les automatiquement et
-          envoyez-les à votre comptable en 2 clic.
+          Fini le désordre ! Photos → PDF classés → Envoyés. Simple, non ?.
         </motion.p>
 
         <motion.div
