@@ -48,7 +48,7 @@ const PRICING_PLANS = [
 export default function LandingPage() {
   const router = useRouter()
   return (
-    <main className='min-h-screen bg-white text-gray-800 px-4 py-8 sm:px-6 sm:py-12'>
+    <main className='flex flex-col min-h-screen text-gray-800 px-4 pt-8 sm:px-6 sm:py-12'>
       {/* Hero Section */}
       <section className='max-w-5xl mx-auto text-center space-y-6'>
         <motion.h1
@@ -195,6 +195,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
       <Footer />
     </main>
   )

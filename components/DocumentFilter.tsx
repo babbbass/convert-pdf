@@ -130,7 +130,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
         <DocumentFilterSelect filter={filter} setFilter={setFilter} />
       </div>
       {/* Docs Table Desktop version */}
-      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary mt-2 mx-4 transition-all duration-300 ease-in-out'>
+      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary mt-2 mb-10 mx-4 transition-all duration-300 ease-in-out m'>
         <table className='min-w-full divide-y divide-gray-200'>
           <thead className='bg-gray-50 sticky top-0 text-primary'>
             <tr>

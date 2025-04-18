@@ -3,7 +3,7 @@ import { Logo } from "./Logo"
 
 export function Footer() {
   return (
-    <footer className='flex flex-col mt-10 items-start justify-between md:text-2xl min-h-24 w-full p-2 px-4 border-t gap-3 border-slate-200 text-gray-500'>
+    <footer className='flex flex-col mt-auto items-start justify-between md:text-2xl min-h-24 w-full p-2 px-4 border-t gap-3 border-slate-200 text-gray-500'>
       <section>
         <Logo />
       </section>
