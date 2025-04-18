@@ -9,6 +9,7 @@ import {
   INVOICE_CUSTOMER,
   ACCOUNTANT,
   DOCUMENT_SENT,
+  DOCUMENT_PER_PAGE,
 } from "@/lib/constants"
 import { Document } from "@/lib/types"
 import { useGlobalStore } from "@/stores/globalStore"
@@ -22,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { DisplayDocumentButton } from "./DisplayDocumentButton"
+import { Pagination } from "./Pagination"
 export function DocumentFilter({ documents }: { documents: Document[] }) {
   const { setDocument, document } = useGlobalStore()
   const router = useRouter()
@@ -31,10 +33,20 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
   const [showDialog, setShowDialog] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [, setStatusFile] = useState<null | string>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+
   const filteredDocuments = documents.filter((doc) => {
     if (filter === ACCOUNTANT) return true
     return doc.type === filter
   })
+  // Documents to display
+  const indexOfLastDocument = currentPage * DOCUMENT_PER_PAGE
+  const indexOfFirstDocument = indexOfLastDocument - DOCUMENT_PER_PAGE
+  const currentDocuments = filteredDocuments.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  )
+  const totalPages = Math.ceil(filteredDocuments.length / DOCUMENT_PER_PAGE)
 
   if (showDialog) {
     return (
@@ -130,7 +142,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
         <DocumentFilterSelect filter={filter} setFilter={setFilter} />
       </div>
       {/* Docs Table Desktop version */}
-      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary mt-2 mb-10 mx-4 transition-all duration-300 ease-in-out m'>
+      <div className='hidden md:block overflow-hidden border shadow-sm rounded-2xl border-secondary mt-2 mb-10 mx-4 transition-all duration-300 ease-in-out p-4 '>
         <table className='min-w-full divide-y divide-gray-200'>
           <thead className='bg-gray-50 sticky top-0 text-primary'>
             <tr>
@@ -156,7 +168,7 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
             </tr>
           </thead>
           <tbody className='bg-white divide-y divide-gray-200'>
-            {filteredDocuments.map((document, numLine: number) =>
+            {currentDocuments.map((document, numLine: number) =>
               document.history?.map((history, index: number) => (
                 <tr
                   key={`${document.id}-${history.id}`}
@@ -201,9 +213,14 @@ export function DocumentFilter({ documents }: { documents: Document[] }) {
             )}
           </tbody>
         </table>
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
       </div>
       {/* Mobile version (cards) */}
-      <div className='md:hidden space-y-4 px-4 mt-2'>
+      <div className='md:hidden space-y-4 px-4 mt-2 mb-10'>
         {filteredDocuments.map((document) => (
           <div
             key={document.id}

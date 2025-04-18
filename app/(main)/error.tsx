@@ -9,9 +9,14 @@ export default function Error({
 }) {
   console.log(error)
   return (
-    <div>
+    <div className='text-center'>
       <h2>Une erreur est survenue!</h2>
-      <button onClick={() => reset()}>Réessayer</button>
+      <button
+        onClick={() => reset()}
+        className='mt-4 text-secondary cursor-pointer'
+      >
+        Réessayer
+      </button>
     </div>
   )
 }
