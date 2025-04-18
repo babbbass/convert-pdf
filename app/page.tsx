@@ -66,7 +66,7 @@ export default function LandingPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          Fini le désordre ! Photos → PDF classés → Envoyés. Simple, non ?.
+          Fini le désordre ! Photos → PDF classés → Envoyés. Simple, non ?
         </motion.p>
 
         <motion.div
