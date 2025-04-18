@@ -255,7 +255,7 @@ export default function Home() {
             <h2 className='text-xl md:text-2xl tracking-tight text-primary mb-4'>{``}</h2>
           </div>
           <ul className='font-medium text-secondary'>
-            <li>Classez vos factures ou note de frais !</li>
+            <li>Classez vos factures ou notes de frais !</li>
             <li>Envoyez les en 2 clics !</li>
           </ul>
 
