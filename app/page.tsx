@@ -110,7 +110,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className='mt-16 sm:mt-20 lg:mt-24'>
+      <section className='mt-16 sm:mt-20 lg:mt-24 mb-10'>
         <div className='max-w-5xl mx-auto text-center space-y-4'>
           <motion.h2
             className='text-3xl font-bold tracking-tight sm:text-4xl'
