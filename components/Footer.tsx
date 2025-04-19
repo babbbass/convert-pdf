@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { Logo } from "./Logo"
 
-export function Footer() {
+export function Footer({ className }: Readonly<{ className?: string }>) {
   return (
-    <footer className='flex flex-col mt-auto items-start justify-between md:text-2xl min-h-24 w-full p-2 px-4 border-t gap-3 border-slate-200 text-gray-500'>
+    <footer
+      className={`flex flex-col mt-auto items-start justify-between md:text-2xl min-h-24 w-full p-2 md:pt-3 px-4 border-t gap-3 border-slate-200 text-gray-500 italic ${className} `}
+    >
       <section>
         <Logo />
       </section>
