@@ -5,6 +5,7 @@ const isPublicRoute = createRouteMatcher([
   "/sign-up(.*)",
   "/",
   "/api/webhooks/lemonsqueezy",
+  "/api/send-email-landing",
 ])
 
 export default clerkMiddleware(async (auth, request) => {

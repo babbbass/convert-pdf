@@ -7,6 +7,15 @@ import { Footer } from "@/components/Footer"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Questions } from "@/components/Questions"
+import { ImageUploader } from "@/components/ImageUploader"
+import { ImageList } from "@/components/ImageList"
+import { useState, useCallback } from "react"
+import { reorderedItem } from "@/lib/types"
+import { useGlobalStore } from "@/stores/globalStore"
+import Image from "next/image"
+import { LandingEmailTrigger } from "@/components/LandingEmailTrigger"
+import { GeneratePdfButton } from "@/components/buttons/GeneratePdfButton"
+import { Separator } from "@/components/ui/separator"
 
 const FEATURES = [
   {
@@ -53,11 +62,48 @@ const PRICING_PLANS = [
 ] as const
 
 export default function LandingPage() {
+  const { document } = useGlobalStore()
+  const [images, setImages] = useState<
+    Array<{ id: string; file: File; preview: string }>
+  >([])
+  const [isGenerated, setIsGenerated] = useState(false)
+
+  const handleImagesSelected = useCallback((files: File[]) => {
+    const newImages = files.map((file) => ({
+      id: Math.random().toString(36).substring(2, 9),
+      file,
+      preview: file.type.startsWith("image/")
+        ? URL.createObjectURL(file)
+        : "/pdf.png",
+    }))
+    setImages((prev) => [...prev, ...newImages])
+    setIsGenerated(false)
+  }, [])
   const router = useRouter()
+
+  const handleReorder = useCallback(
+    (result: reorderedItem) => {
+      if (!result.destination) return
+
+      const items = Array.from(images)
+      const [reorderedItem] = items.splice(result.source.index, 1)
+      items.splice(result.destination.index, 0, reorderedItem)
+
+      setImages(items)
+    },
+    [images]
+  )
+
+  const handleRemove = useCallback((id: string) => {
+    setImages((prev) => {
+      const filtered = prev.filter((image) => image.id !== id)
+      return filtered
+    })
+  }, [])
   return (
     <main className='flex flex-col min-h-screen text-gray-800 pt-0 sm:pb-12 bg-secondary'>
       {/* Hero Section */}
-      <section className="mx-auto w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110 ">
+      <section className="w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110">
         <motion.h1
           className='text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl text-primary'
           initial={{ opacity: 0, y: -20 }}
@@ -116,12 +162,50 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className='px-4 bg-slate-50 mt-10'>
+      <section className='mt-10 p-10 md:p-20 bg-slate-50'>
+        <div className='flex gap-6 flex-col max-w-6xl mx-auto w-full'>
+          <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center'>
+            Ne nous croyez pas sur parole, essayez-vous même 👇
+          </h2>
+          <ImageUploader onImagesSelected={handleImagesSelected} />
+          <ImageList
+            images={images}
+            onReorder={handleReorder}
+            onRemove={handleRemove}
+          />
+          {images.length > 0 && (
+            <div className='flex justify-center'>
+              <GeneratePdfButton
+                images={images}
+                isGenerated={setIsGenerated}
+                setImages={setImages}
+              />
+            </div>
+          )}
+          {isGenerated && (
+            <div className='flex flex-col gap-4 items-center justify-center'>
+              <h3 className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'>
+                <Image
+                  src='/pdf.png'
+                  width={40}
+                  height={40}
+                  alt='mes documents'
+                />
+                {document?.name}
+              </h3>
+              <LandingEmailTrigger />
+            </div>
+          )}
+        </div>
+      </section>
+      <Separator className='bg-gray-300 w-3/4 mx-auto px-4' />
+
+      <section className='px-4 bg-slate-50 mt-0'>
         <Questions />
       </section>
 
       {/* Pricing Section */}
-      <section className='my-10 px-4 md:py-10'>
+      <section className='my-10 px-4 md:py-10 '>
         <div className='max-w-5xl mx-auto text-center space-y-4'>
           <motion.h2
             className='text-3xl font-bold tracking-tight sm:text-4xl text-slate-50'
