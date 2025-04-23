@@ -8,28 +8,14 @@ import {
 } from "@/lib/constants"
 import prisma from "@/lib/prisma"
 import { currentUser } from "@clerk/nextjs/server"
+import { v4 as uuidv4 } from "uuid"
 
 export async function POST(req: NextRequest) {
-  const clerkUser = await currentUser()
-
-  if (!clerkUser) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { clerkUserId: clerkUser.id },
-  })
-
-  if (!user) {
-    return NextResponse.json(
-      { error: "Utilisateur non trouvé" },
-      { status: 404 }
-    )
-  }
   try {
     const formData = await req.formData()
     const file = formData.get("file") as File
     const classification = formData.get("classification") as string
+    const isGuest = formData.get("isGuest") === "true"
 
     if (!file) {
       return NextResponse.json(
@@ -52,12 +38,46 @@ export async function POST(req: NextRequest) {
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })
 
+    let user
+    const clerkUser = await currentUser()
+
+    if (clerkUser) {
+      // Utilisateur connecté
+      user = await prisma.user.findUnique({
+        where: { clerkUserId: clerkUser.id },
+      })
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "Utilisateur non trouvé" },
+          { status: 404 }
+        )
+      }
+    } else if (isGuest) {
+      // Utilisateur invité - créer un utilisateur temporaire
+      const guestId = `guest_${uuidv4()}`
+      user = await prisma.user.upsert({
+        where: { clerkUserId: guestId },
+        update: {},
+        create: {
+          clerkUserId: guestId,
+          email: `${guestId}@temp.user`,
+          firstName: "Guest",
+          lastName: "User",
+          isGuest: true,
+        },
+      })
+    } else {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
+    }
+
     const document = await prisma.document.create({
       data: {
         name: file.name,
         url: url,
         type: targetFolder,
         user: { connect: { id: user.id } },
+        isGuestDocument: isGuest,
         history: {
           create: {
             sender: { connect: { id: user.id } },
@@ -75,6 +95,7 @@ export async function POST(req: NextRequest) {
       success: true,
       documentId: document.id,
       filePath: url,
+      isGuest: isGuest, // Informer le front que c'est un document temporaire
     })
   } catch (error) {
     console.error("Erreur lors de l'upload:", error)

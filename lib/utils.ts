@@ -5,6 +5,10 @@ import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
 import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 import { formatDateOfDay } from "./date"
 import { storeDocument } from "@/lib/storeDocument"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 export async function classifyDocument(textOfDocument: string) {
   const res = await fetch("/api/classifyInvoice", {
     method: "POST",
@@ -33,10 +37,6 @@ function generateNameDocument(typeDocument: string) {
   const documentName = `${typeDocument}_${date}.pdf`
 
   return documentName
-}
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
 }
 
 export async function handleImage(
@@ -83,36 +83,32 @@ export async function handleImage(
   return page
 }
 
-export async function generatePdf(
+export async function handlePdf(
   document: File | Uint8Array<ArrayBufferLike>,
-  worker: Worker
+  worker: Worker,
+  isGuest: boolean
 ) {
   let textOfDocument: string | undefined = ""
   try {
     if (!worker) {
       throw new Error("OCR not initialized")
     }
+    // @ts-expect-error ignore
     textOfDocument = await extractTextFromPdf(document, worker)
   } catch (error) {
     console.error(error)
-    // toast(
-    //   "Une erreur lors de la lecture de votre Document. Veuillez réessayer.",
-    //   {
-    //     style: {
-    //       backgroundColor: "#c10007",
-    //       color: "#f8fafc",
-    //       padding: "10px",
-    //     },
-    //     position: "top-right",
-    //   }
-    // )
   }
 
   //const { classification } = await classifyDocument(textOfDocument)
-  const classification = "2"
+  const classification = "1"
   const documentType = generateTypeDocument(Number(classification))
   const documentName = generateNameDocument(documentType)
-  const docStored = await storeDocument(document, documentName, classification)
+  const docStored = await storeDocument(
+    document,
+    documentName,
+    classification,
+    isGuest
+  )
   if (!docStored.success) {
     console.error(docStored)
     return "erreur upload"

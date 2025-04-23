@@ -15,6 +15,7 @@ model User {
   firstName           String?
   lastName            String?
   profileImageUrl     String?
+  isGuest             Boolean     @default(false)
   documents           Document[] 
   sentHistories       History[]   @relation("senderHistories")
   subscription        Subscription?
@@ -23,14 +24,15 @@ model User {
 }
 
 model Document {
-  id          String        @id @default(uuid()) 
-  name        String        
-  url         String  
-  type        String        @default("Document_Comptable")      
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  history     History[]     
-  createdAt   DateTime      @default(now())
+  id              String        @id @default(uuid()) 
+  isGuestDocument Boolean       @default(false)
+  name            String        
+  url             String  
+  type            String        @default("Document_Comptable")      
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  history         History[]     
+  createdAt       DateTime      @default(now())
 }
 
 model History {

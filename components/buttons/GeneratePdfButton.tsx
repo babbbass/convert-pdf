@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Loader2, FileText } from "lucide-react"
 import { useTesseract } from "@/hooks/useTesseract"
 import { PDFDocument } from "pdf-lib"
-import { handleImage, generatePdf } from "@/lib/utils"
+import { handleImage, handlePdf } from "@/lib/utils"
 import { toast } from "sonner"
 import { useGlobalStore } from "@/stores/globalStore"
 
@@ -20,8 +20,7 @@ export function GeneratePdfButton({
   setImages: (x: []) => void
 }) {
   const [isGenerating, setIsGenerating] = useState(false)
-  // const [, setIsGenerated] = useState(false)
-  const { setDocument } = useGlobalStore()
+  const { setDocument, isGuest } = useGlobalStore()
   const worker = useTesseract()
   const handleFiles = async () => {
     setIsGenerating(true)
@@ -36,7 +35,7 @@ export function GeneratePdfButton({
         type: "application/pdf",
       })
       // @ts-expect-error ignore
-      const response = await generatePdf(file, worker)
+      const response = await handlePdf(file, worker, isGuest)
 
       if (response === "erreur upload") {
         toast("Erreur lors de la generation du PDF", {
@@ -50,9 +49,9 @@ export function GeneratePdfButton({
         return
       }
 
-      // setIsGenerated(true)
       setDocument({
         name: response.name,
+        // @ts-expect-error ignore
         type: response.type,
         filePath: response.filePath,
       })
