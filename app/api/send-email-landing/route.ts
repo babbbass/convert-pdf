@@ -22,6 +22,7 @@ export async function POST(req: Request) {
       where: { email: messageTo },
       select: { id: true },
     })
+
     if (user) {
       return NextResponse.json(
         { message: "user already exist" },

@@ -234,7 +234,7 @@ export default function Home() {
   }, [images.length])
 
   return (
-    <div className=' px-4 pb-2 flex-1'>
+    <div className='px-4 pb-2 flex-1'>
       <div className='max-w-4xl mx-auto space-y-8 mb-12'>
         <div className='text-base md:text-lg text-center space-y-4'>
           <div className='flex flex-col gap-1'>
