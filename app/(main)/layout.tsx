@@ -19,8 +19,16 @@ export default async function RootLayout({
   })
 
   if (!dbUser) {
-    await prisma.user.create({
-      data: {
+    await prisma.user.upsert({
+      where: {
+        email: user.emailAddresses[0].emailAddress,
+      },
+      update: {
+        clerkUserId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      create: {
         clerkUserId: user.id,
         email: user.emailAddresses[0].emailAddress,
         firstName: user.firstName,
@@ -28,6 +36,7 @@ export default async function RootLayout({
       },
     })
   }
+
   return (
     <Wrapper>
       <Suspense fallback={<Loading />}>{children}</Suspense>

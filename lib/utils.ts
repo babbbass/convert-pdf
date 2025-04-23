@@ -99,8 +99,8 @@ export async function handlePdf(
     console.error(error)
   }
 
-  //const { classification } = await classifyDocument(textOfDocument)
-  const classification = "1"
+  const { classification } = await classifyDocument(textOfDocument)
+  // const classification = "1"
   const documentType = generateTypeDocument(Number(classification))
   const documentName = generateNameDocument(documentType)
   const docStored = await storeDocument(

@@ -5,7 +5,6 @@ import { ImageList } from "@/components/ImageList"
 import { PDFDocument } from "pdf-lib"
 import { toast } from "sonner"
 import { reorderedItem } from "@/lib/types"
-import { SendEmailTrigger } from "@/components/SendEmailTrigger"
 import { extractTextFromPdf } from "@/lib/extractTextFromPdf"
 import { FileText, Loader2 } from "lucide-react"
 import { useTesseract } from "@/hooks/useTesseract"
@@ -14,18 +13,18 @@ import { useGlobalStore } from "@/stores/globalStore"
 import { storeDocument } from "@/lib/storeDocument"
 import { INVOICE_CUSTOMER, COSTS, ACCOUNTANT } from "@/lib/constants"
 import { Questions } from "@/components/Questions"
-import { DisplayDocumentButton } from "@/components/DisplayDocumentButton"
-import Image from "next/image"
+import { PdfGenerated } from "@/components/PdfGenerated"
+import { getAppropriateScale } from "@/lib/utils"
 
 export default function Home() {
-  const { document, setDocument } = useGlobalStore()
+  const { setDocument } = useGlobalStore()
   const worker = useTesseract()
   const [images, setImages] = useState<
     Array<{ id: string; file: File; preview: string }>
   >([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [isGenerated, setIsGenerated] = useState(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  // const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleImagesSelected = useCallback((files: File[]) => {
     const newImages = files.map((file) => ({
@@ -58,17 +57,6 @@ export default function Home() {
       return filtered
     })
   }, [])
-
-  function getAppropriateScale(width: number, height: number) {
-    const screenWidth = window.innerWidth
-    const screenHeight = window.innerHeight
-    const isPortrait = 0
-
-    const scaleFactor = isPortrait
-      ? screenWidth / width / 4
-      : screenHeight / height / 4
-    return Math.min(scaleFactor, 1)
-  }
 
   async function classifyDocument(textOfDocument: string) {
     const res = await fetch("/api/classifyInvoice", {
@@ -208,6 +196,7 @@ export default function Home() {
       const file = new File([pdfBytes], "nameFile.pdf", {
         type: "application/pdf",
       })
+
       const response = await generatePdf(file)
       if (response) {
         toast("Erreur lors de la generation du PDF", {
@@ -275,36 +264,10 @@ export default function Home() {
 
           <div className='flex flex-col md:flex-row mx-auto gap-3 items-center md:justify-around px-2 mt-10'>
             {isGenerated && (
-              <div className='flex flex-col gap-3 items-center justify-center w-5/6'>
-                <h3 className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'>
-                  <Image
-                    src='/pdf.png'
-                    width={40}
-                    height={40}
-                    alt='mes documents'
-                  />
-                  {document?.name}
-                </h3>
-                <DisplayDocumentButton
-                  isShowDialog={setIsDialogOpen}
-                  documentUrl={document?.filePath}
-                  className='flex items-center justify-center w-full bg-secondary text-slate-50 px-6 py-4 cursor-pointer border border-secondary rounded-2xl font-medium hover:bg-secondary/80 hover:text-slate-50 transition-all duration-300 hover:border-secondary/80'
-                />
-                <SendEmailTrigger
-                  isOpen={isDialogOpen}
-                  setIsDialogOpen={setIsDialogOpen}
-                />
-                <div
-                  className='flex items-center justify-center w-full bg-primary text-slate-50 px-6 py-4 cursor-pointer border border-primary rounded-2xl font-medium hover:bg-primary/80 hover:text-slate-50 transition-all duration-300 hover:border-primary/80'
-                  onClick={() => {
-                    setImages([])
-                    setIsGenerated(false)
-                  }}
-                >
-                  {" "}
-                  Reintialiser
-                </div>
-              </div>
+              <PdfGenerated
+                setImages={setImages}
+                setIsGenerated={setIsGenerated}
+              />
             )}
             {images.length > 0 && (
               <button

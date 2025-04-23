@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-//import { currentUser } from "@clerk/nextjs/server"
 import Mailgun from "mailgun.js"
 import formData from "form-data"
 import prisma from "@/lib/prisma"
@@ -19,18 +18,17 @@ export async function POST(req: Request) {
       )
     }
 
-    const user = await prisma.user.findFirstOrThrow({
+    const user = await prisma.user.findFirst({
       where: { email: messageTo },
       select: { id: true },
     })
     if (user) {
-      // console.log("user already exist")
       return NextResponse.json(
         { message: "user already exist" },
         { status: 409 }
       )
     }
-    console.log("user doesn't exist")
+
     const mailgun = new Mailgun(formData)
     const client = mailgun.client({
       username: "api",
@@ -58,16 +56,17 @@ export async function POST(req: Request) {
       ],
     })
 
+    const document = await prisma.document.findFirstOrThrow({
+      where: { url: filePath },
+      select: { id: true },
+    })
+
     await prisma.user.create({
       data: {
         clerkUserId: "",
         id: messageTo,
         email: messageTo,
       },
-    })
-    const document = await prisma.document.findFirstOrThrow({
-      where: { url: filePath },
-      select: { id: true },
     })
 
     await prisma.history.updateMany({

@@ -62,6 +62,7 @@ const PRICING_PLANS = [
 ] as const
 
 export default function LandingPage() {
+  const [isSended, setIsSended] = useState(false)
   const { document } = useGlobalStore()
   const [images, setImages] = useState<
     Array<{ id: string; file: File; preview: string }>
@@ -164,24 +165,29 @@ export default function LandingPage() {
 
       <section className='mt-10 p-10 md:p-20 bg-slate-50'>
         <div className='flex gap-6 flex-col max-w-6xl mx-auto w-full'>
-          <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center'>
-            Ne nous croyez pas sur parole, essayez-vous même 👇
-          </h2>
-          <ImageUploader onImagesSelected={handleImagesSelected} />
-          <ImageList
-            images={images}
-            onReorder={handleReorder}
-            onRemove={handleRemove}
-          />
-          {images.length > 0 && (
-            <div className='flex justify-center'>
-              <GeneratePdfButton
+          {!isSended && (
+            <>
+              <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center'>
+                Ne nous croyez pas sur parole, essayez-vous même 👇
+              </h2>
+              <ImageUploader onImagesSelected={handleImagesSelected} />
+              <ImageList
                 images={images}
-                isGenerated={setIsGenerated}
-                setImages={setImages}
+                onReorder={handleReorder}
+                onRemove={handleRemove}
               />
-            </div>
+              {images.length > 0 && (
+                <div className='flex justify-center'>
+                  <GeneratePdfButton
+                    images={images}
+                    isGenerated={setIsGenerated}
+                    setImages={setImages}
+                  />
+                </div>
+              )}
+            </>
           )}
+
           {isGenerated && (
             <div className='flex flex-col gap-4 items-center justify-center'>
               <h3 className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'>
@@ -193,7 +199,18 @@ export default function LandingPage() {
                 />
                 {document?.name}
               </h3>
-              <LandingEmailTrigger />
+              <div className='flex flex-col gap-4 items-center justify-center'>
+                {isSended ? (
+                  <h2 className='text-lg font-bold tracking-tight sm:text-2xl md:text-3xl text-secondary text-center'>
+                    Merci, votre PDF a bien été envoyé
+                  </h2>
+                ) : (
+                  <LandingEmailTrigger
+                    setIsSended={setIsSended}
+                    isSended={isSended}
+                  />
+                )}
+              </div>
             </div>
           )}
         </div>

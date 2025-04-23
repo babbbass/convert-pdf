@@ -16,7 +16,8 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File
     const classification = formData.get("classification") as string
     const isGuest = formData.get("isGuest") === "true"
-
+    // console.log("isGuest", isGuest)
+    // return
     if (!file) {
       return NextResponse.json(
         { error: "Aucun fichier fourni" },

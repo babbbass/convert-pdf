@@ -21,11 +21,16 @@ import { Loader2, Send, Eye } from "lucide-react"
 import { useGlobalStore } from "@/stores/globalStore"
 import { toast } from "sonner"
 
-export function LandingEmailTrigger() {
+export function LandingEmailTrigger({
+  setIsSended,
+  isSended,
+}: {
+  setIsSended: (x: boolean) => void
+  isSended: boolean
+}) {
   const [isOpen, setIsDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { document } = useGlobalStore()
-  const [isSended, setIsSended] = useState(false)
 
   const formSchema = z.object({
     emailTo: z.string().email("Veuillez entrer une adresse email valide"),
@@ -51,17 +56,16 @@ export function LandingEmailTrigger() {
       })
       formData.append("files", file)
     }
-    // console.log(typeof file, file)
+
     formData.append("filePath", document?.filePath || "")
 
-    // console.log("Envoi du document à:", values.emailTo)
     const response = await fetch("/api/send-email-landing", {
       method: "POST",
       body: formData,
     })
 
     const data = await response.json()
-    console.log(response)
+
     if (!response.ok) {
       if (data.message === "user already exist") {
         toast("Adresse email deja utilisée", {
@@ -75,7 +79,7 @@ export function LandingEmailTrigger() {
 
         setIsLoading(false)
         setIsDialogOpen(false)
-        setIsSended(true)
+        // setIsSended(true)
         form.reset()
         return
       }
@@ -97,9 +101,7 @@ export function LandingEmailTrigger() {
     form.reset()
   }
 
-  return isSended ? (
-    <p className='text-green-600 font-medium'>Document envoyé</p>
-  ) : (
+  return (
     <Dialog open={isOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         className={`flex items-center justify-center w-full bg-green-600 text-slate-50 px-6 py-4 cursor-pointer border border-green-600 rounded-2xl font-medium hover:bg-green-600/80 hover:text-slate-50 transition-colors duration-300 hover:border-green-600 ${
