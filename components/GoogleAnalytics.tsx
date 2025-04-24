@@ -1,0 +1,13 @@
+"use client"
+
+import { GoogleAnalytics } from "@next/third-parties/google"
+
+export function Analytics() {
+  return (
+    <>
+      <GoogleAnalytics
+        gaId={process.env.NEXT_PUBLIC_ANALYTICS_MEASUREMENT_ID as string}
+      />
+    </>
+  )
+}

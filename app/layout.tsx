@@ -7,6 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { frFR } from "@clerk/localizations"
 import { ServiceWorkerProvider } from "@/components/ServiceWorkerProvider"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@/components/GoogleAnalytics"
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -46,6 +47,7 @@ export default function RootLayout({
         >
           <ServiceWorkerProvider />
           {children}
+          <Analytics />
           <Toaster />
           <SpeedInsights />
         </body>

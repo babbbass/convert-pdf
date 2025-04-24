@@ -25,6 +25,7 @@
     "@langchain/core": "^0.3.42",
     "@langchain/openai": "^0.4.4",
     "@neondatabase/serverless": "^1.0.0",
+    "@next/third-parties": "^15.3.1",
     "@prisma/adapter-neon": "^6.5.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-dialog": "^1.1.6",
