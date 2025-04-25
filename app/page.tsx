@@ -5,7 +5,7 @@ import { CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { Footer } from "@/components/Footer"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { Questions } from "@/components/Questions"
 import { ImageUploader } from "@/components/ImageUploader"
 import { ImageList } from "@/components/ImageList"
@@ -16,6 +16,8 @@ import Image from "next/image"
 import { LandingEmailTrigger } from "@/components/LandingEmailTrigger"
 import { GeneratePdfButton } from "@/components/buttons/GeneratePdfButton"
 import { Separator } from "@/components/ui/separator"
+import { HeaderLanding } from "@/components/HeaderLanding"
+import { useAuth } from "@clerk/nextjs"
 
 const FEATURES = [
   {
@@ -62,6 +64,12 @@ const PRICING_PLANS = [
 ] as const
 
 export default function LandingPage() {
+  const { userId } = useAuth()
+
+  if (userId) {
+    redirect("/accueil")
+  }
+
   const [isSended, setIsSended] = useState(false)
   const { document } = useGlobalStore()
   const [images, setImages] = useState<
@@ -103,6 +111,7 @@ export default function LandingPage() {
   }, [])
   return (
     <main className='flex flex-col min-h-screen text-gray-800 pt-0 sm:pb-12 bg-secondary'>
+      <HeaderLanding className='!mb-0 z-50' />
       {/* Hero Section */}
       <section className="w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110">
         <motion.h1
