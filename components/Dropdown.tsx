@@ -14,7 +14,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
 import { InstallPWAButton } from "@/components/InstallPWAButton"
 
-export function Dropdown({ landing }: { landing: boolean }) {
+export function Dropdown({ landing }: { landing?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
@@ -24,7 +24,6 @@ export function Dropdown({ landing }: { landing: boolean }) {
       document.body.classList.remove("overflow-hidden")
     }
 
-    // Nettoyage lors du démontage du composant
     return () => {
       document.body.classList.remove("overflow-hidden")
     }
