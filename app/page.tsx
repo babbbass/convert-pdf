@@ -110,8 +110,10 @@ export default function LandingPage() {
     })
   }, [])
   return (
-    <main className='flex flex-col min-h-screen text-gray-800 pt-0 sm:pb-12 bg-secondary'>
-      <HeaderLanding className='!mb-0 z-50' />
+    <main className='flex flex-col min-h-screen text-gray-800 pt-0 sm:pb-12 bg-secondary overflow-x-hidden'>
+      <section className='mb-0 bg-slate-50 z-50'>
+        <HeaderLanding />
+      </section>
       {/* Hero Section */}
       <section className="w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110">
         <motion.h1
@@ -176,8 +178,8 @@ export default function LandingPage() {
         <div className='flex gap-6 flex-col max-w-6xl mx-auto w-full'>
           {!isSended && (
             <>
-              <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center'>
-                Ne nous croyez pas sur parole, essayez-vous même 👇
+              <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center italic'>
+                Testez par vous-même et jugez ! 👇
               </h2>
               <ImageUploader onImagesSelected={handleImagesSelected} />
               <ImageList
