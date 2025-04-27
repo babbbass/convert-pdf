@@ -5,11 +5,11 @@ import { CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { Footer } from "@/components/Footer"
 import Link from "next/link"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Questions } from "@/components/Questions"
 import { ImageUploader } from "@/components/ImageUploader"
 import { ImageList } from "@/components/ImageList"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { reorderedItem } from "@/lib/types"
 import { useGlobalStore } from "@/stores/globalStore"
 import Image from "next/image"
@@ -64,11 +64,9 @@ const PRICING_PLANS = [
 ] as const
 
 export default function LandingPage() {
-  const { userId } = useAuth()
-
-  if (userId) {
-    redirect("/accueil")
-  }
+  const { userId, isLoaded } = useAuth()
+  const router = useRouter()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   const [isSended, setIsSended] = useState(false)
   const { document } = useGlobalStore()
@@ -76,6 +74,14 @@ export default function LandingPage() {
     Array<{ id: string; file: File; preview: string }>
   >([])
   const [isGenerated, setIsGenerated] = useState(false)
+
+  useEffect(() => {
+    if (isLoaded && userId && !isRedirecting) {
+      setIsRedirecting(true)
+      // replace no keep in navigator history
+      router.replace("/accueil")
+    }
+  }, [isLoaded, userId, router, isRedirecting])
 
   const handleImagesSelected = useCallback((files: File[]) => {
     const newImages = files.map((file) => ({
@@ -88,7 +94,6 @@ export default function LandingPage() {
     setImages((prev) => [...prev, ...newImages])
     setIsGenerated(false)
   }, [])
-  const router = useRouter()
 
   const handleReorder = useCallback(
     (result: reorderedItem) => {
@@ -109,6 +114,40 @@ export default function LandingPage() {
       return filtered
     })
   }, [])
+
+  if (!isLoaded) {
+    return (
+      <div className='flex flex-col items-center justify-center min-h-screen bg-secondary text-slate-50 p-4'>
+        <div
+          className='animate-spin rounded-full h-12 w-12 border-4 border-solid border-slate-50 border-t-slate-300 mb-4'
+          role='status'
+          aria-live='polite'
+          aria-label='Chargement en cours'
+        >
+          <span className='sr-only'>Chargement...</span>{" "}
+        </div>
+        <p className='mt-4 text-lg font-medium'>Chargement...</p>
+      </div>
+    )
+  }
+
+  if (isRedirecting) {
+    return (
+      <div className='flex flex-col items-center justify-center min-h-screen bg-secondary text-slate-50 p-4 text-center'>
+        <div
+          className='animate-spin rounded-full h-16 w-16 border-4 border-solid border-slate-300/50 border-t-slate-50 mb-4'
+          role='status'
+          aria-live='polite'
+          aria-label='Redirection en cours'
+        >
+          <span className='sr-only'>Redirection...</span>
+        </div>
+        <p className='text-xl font-semibold'>
+          Vous êtes connecté. Redirection vers votre espace en cours...
+        </p>
+      </div>
+    )
+  }
   return (
     <main className='flex flex-col min-h-screen text-gray-800 pt-0 sm:pb-12 bg-secondary overflow-x-hidden'>
       <section className='mb-0 bg-slate-50 z-50'>
@@ -294,15 +333,18 @@ export default function LandingPage() {
                           ? "bg-secondary text-slate-50 hover:bg-secondary/90 cursor-pointer"
                           : "bg-secondary text-slate-50 hover:bg-secondary/90 cursor-pointer"
                       }`}
-                      onClick={() => {
-                        if (plan.featured) {
-                          window.location.href = "/accueil"
-                        } else {
-                          window.location.href = "/accueil"
-                        }
-                      }}
+                      asChild
+                      // onClick={() => {
+                      //   if (plan.featured) {
+                      //     window.location.href = "/accueil"
+                      //   } else {
+                      //     window.location.href = "/accueil"
+                      //   }
+                      // }}
                     >
-                      {plan.featured ? "Commencer" : "Essayer"}
+                      <Link href='/accueil'>
+                        {plan.featured ? "Commencer" : "Essayer"}
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>
