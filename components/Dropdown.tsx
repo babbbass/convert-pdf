@@ -9,6 +9,7 @@ import {
   X,
   House,
   FileStack,
+  Mail,
 } from "lucide-react"
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import Link from "next/link"
@@ -64,16 +65,25 @@ export function Dropdown({ landing }: { landing?: boolean }) {
                 <Link
                   href={"/accueil"}
                   onClick={() => setIsOpen(false)}
-                  className='flex'
+                  className='flex items-center'
                 >
-                  <House className='mr-2 h-5 w-5' /> Accueil
+                  <House className='mr-2 h-4 w-4 text-secondary' /> Accueil
                 </Link>
                 <Link
                   href={"/historique"}
                   onClick={() => setIsOpen(false)}
-                  className='flex'
+                  className='flex items-center'
                 >
-                  <FileStack className='mr-2 h-5 w-5' /> Historique
+                  <FileStack className='mr-2 h-5 w-5 text-secondary' />{" "}
+                  Historique
+                </Link>
+                <Link
+                  href={"/contact"}
+                  className='flex items-center'
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Mail className='mr-2 h-4 w-4 text-secondary' /> Nous
+                  contacter
                 </Link>
                 <SignedIn>
                   <UserButton />
@@ -82,6 +92,13 @@ export function Dropdown({ landing }: { landing?: boolean }) {
             )}
 
             <SignedOut>
+              <Link
+                href={"/contact"}
+                className='flex items-center'
+                onClick={() => setIsOpen(false)}
+              >
+                <Mail className='mr-2 h-4 w-4 text-secondary' /> Nous contacter
+              </Link>
               <Link href={"/sign-in"}>
                 <Button className='inline-flex md:hidden bg-slate-100 border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
                   Connexion <ChevronRight className='ml-0 h-4 w-4' />

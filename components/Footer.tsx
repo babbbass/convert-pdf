@@ -19,7 +19,11 @@ export function Footer({ className }: Readonly<{ className?: string }>) {
             Conditions <span className='mx-1 hidden md:inline'>|</span>
           </Link>
           <Link href={""} className='text-sm'>
-            Préférences de cookies
+            Préférences de cookies{" "}
+            <span className='mx-1 hidden md:inline'>|</span>
+          </Link>
+          <Link href={"/contact"} className='text-sm'>
+            Nous contacter
           </Link>
         </div>
       </section>
