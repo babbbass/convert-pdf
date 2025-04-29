@@ -43,7 +43,7 @@ export default function RootLayout({
     <ClerkProvider localization={frFR}>
       <html lang='fr'>
         <body
-          className={`bg-slate-50 min-h-screen overflow-x-hidden w-full py-2 ${geistMono.variable} ${inter.variable} font-sans antialiased`}
+          className={`bg-slate-50 min-h-screen overflow-x-hidden w-full pt-2 ${geistMono.variable} ${inter.variable} font-sans antialiased`}
         >
           <ServiceWorkerProvider />
           {children}
