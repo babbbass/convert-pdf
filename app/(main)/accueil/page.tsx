@@ -236,22 +236,56 @@ export default function Home() {
   return (
     <div className='px-4 pb-2 flex-1'>
       <div className='max-w-4xl mx-auto space-y-8 mb-12'>
-        <div className='text-base md:text-lg text-center space-y-4'>
+        <div className='text-base md:text-lg text-left space-y-1'>
           <div className='flex flex-col gap-1'>
-            <h1 className='text-2xl md:text-4xl font-bold tracking-tight text-primary'>
-              {`Comptabilité 10x plus rapide `}
+            <h1 className='flex flex-col gap-3 text-2xl md:text-4xl font-bold tracking-tight text-primary'>
+              <span className='text-center'>{`Stop la Paperasse :`}</span>
+              <span className='text-xl'>
+                Gérez vos Notes de Frais et Factures Facilement
+              </span>
             </h1>
-            <h2 className='text-xl md:text-2xl tracking-tight text-primary mb-4'>{``}</h2>
           </div>
-          <ul className='font-medium text-secondary'>
-            <li>Classez vos factures ou notes de frais !</li>
-            <li>Envoyez les en 2 clics !</li>
+          <ul className='font-medium text-secondary mb-6'>
+            <li>Convertissez vos images en PDF</li>
+            <li>Classez et envoyez en 2 clics !</li>
           </ul>
 
-          <ul className='flex flex-col md:flex-row gap-1 items-start md:justify-center px-2 md:gap-2 text-sm md:text-base'>
-            <li>✅ Cryptage sécurisé</li>
-            <li>🔄 Intégration QuickBooks</li>
-            <li>⏱️ 3x plus rapide</li>
+          <ul className='space-y-2 text-sm md:text-base text-primary'>
+            {" "}
+            <li className='flex items-start gap-x-2 text-left'>
+              {" "}
+              <span className='flex-shrink-0'>✅</span>{" "}
+              {/* Icône (ne doit pas rétrécir) */}
+              <span>
+                {" "}
+                {/* Bloc de texte (prend le reste de la place et gère le retour à la ligne) */}
+                <span className='font-semibold'>Sécurité renforcée</span>{" "}
+                (Cryptage de vos données).
+              </span>
+            </li>
+            <li className='flex items-start gap-x-2 text-left'>
+              <span className='flex-shrink-0'>🔄</span>
+              <span>
+                <span className='font-semibold'>Compatible QuickBooks</span>{" "}
+                pour une intégration fluide.
+              </span>
+            </li>
+            <li className='flex items-start gap-x-2 text-left'>
+              <span className='flex-shrink-0'>⏱️</span>
+              <span>
+                <span className='font-semibold'>
+                  Traitement comptable accéléré
+                </span>
+                , moins de saisie manuelle.
+              </span>
+            </li>
+            <li className='flex items-start gap-x-2 text-left'>
+              <span className='flex-shrink-0'>📱</span>
+              <span>
+                <span className='font-semibold'>Accessible</span> où que vous
+                soyez.
+              </span>
+            </li>
           </ul>
         </div>
         <ImageUploader onImagesSelected={handleImagesSelected} />
