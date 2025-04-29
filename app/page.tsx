@@ -21,31 +21,33 @@ import { useAuth } from "@clerk/nextjs"
 
 const FEATURES = [
   {
-    title: "Scan intelligent",
+    title: "Scan intelligent en PDF",
     description:
-      "Prenez une photo, l'app détecte et convertit automatiquement en PDF.",
+      "Prenez une photo ou importez un scan. L'app détecte, optimise et convertit instantanément en PDF clair et professionnel.",
   },
   {
-    title: "Tri automatique",
-    description: "L'IA classe vos documents en factures ou notes de frais.",
+    title: "Tri Automatique par IA",
+    description:
+      "Plus de tri manuel ! Notre IA classe intelligemment vos documents : Facture, Note de frais ou autre justificatif comptable.",
   },
   {
-    title: "Envoi comptable",
+    title: "Envoi Facile et Rapide",
     description:
-      "Envoyez vos documents au comptable en un clic ou automatiquement.",
+      "Transmettez vos documents PDF organisés à votre comptable (ou qui vous voulez) en quelques clics. Clôturez vos comptes plus vite.",
   },
 ] as const
 
 const PRICING_PLANS = [
   {
-    name: "Gratuit",
+    name: "Plan Gratuit",
     price: "0€",
     features: [
-      "100 documents/mois",
-      "Conversion PDF",
-      "Tri automatique",
-      "Stockage Drive",
-      "Envoil email",
+      "100 documents stockés / mois",
+      "Conversion Image/Scan en PDF",
+      "Tri Automatique (Factures / Notes de frais)",
+      "Stockage Sécurisé de vos documents",
+      "Envoi facile par email",
+      "Accès depuis n'importe quel appareil",
     ],
     featured: true,
   },
@@ -156,21 +158,21 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110">
         <motion.h1
-          className='text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl text-primary'
+          className='text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl text-primary italic'
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          Simplifiez votre comptabilité
+          Transformez Vos Reçus en Compta Simplifiée
         </motion.h1>
 
         <motion.p
-          className='text-base text-primary md:text-xl max-w-3xl mx-auto'
+          className='text-base text-primary md:text-xl max-w-3xl mx-auto text-left'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          Fini le désordre ! Photos → PDF classés → Envoyés. Simple, non ?
+          {`Fatigué de perdre du temps avec les reçus papier ? Prenez une photo, notre application convertit, classe vos factures/notes de frais et les prépare pour l'envoi. Gagnez du temps et de la sérénité.`}
         </motion.p>
 
         <motion.div
@@ -182,7 +184,9 @@ export default function LandingPage() {
             size='lg'
             className='text-base rounded-2xl hover:shadow-xl transition-shadow bg-secondary text-card-foreground hover:bg-secondary/90 cursor-pointer relative z-10'
           >
-            <Link href={"/accueil"}>Essayez gratuitement</Link>
+            <Link href={"/accueil"}>
+              Tester Gratuitement Maintenant (Sans CB)
+            </Link>
           </Button>
         </motion.div>
       </section>
@@ -213,12 +217,13 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Test Section */}
       <section className='mt-10 p-10 md:p-20 bg-slate-50'>
         <div className='flex gap-6 flex-col max-w-6xl mx-auto w-full'>
           {!isSended && (
             <>
               <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center italic'>
-                Testez par vous-même et jugez ! 👇
+                Voyez la Magie Opérer : Testez Sans Compte Requis ! 👇
               </h2>
               <ImageUploader onImagesSelected={handleImagesSelected} />
               <ImageList
@@ -241,6 +246,7 @@ export default function LandingPage() {
           {isGenerated && (
             <div className='flex flex-col gap-4 items-center justify-center'>
               <h3 className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'>
+                Votre PDF est prêt :
                 <Image
                   src='/pdf.png'
                   width={40}
@@ -252,7 +258,8 @@ export default function LandingPage() {
               <div className='flex flex-col gap-4 items-center justify-center'>
                 {isSended ? (
                   <h2 className='text-lg font-bold tracking-tight sm:text-2xl md:text-3xl text-secondary text-center'>
-                    Merci, votre PDF a bien été envoyé
+                    Parfait ! Votre document PDF de test a été envoyé avec
+                    succès.
                   </h2>
                 ) : (
                   <LandingEmailTrigger
@@ -289,7 +296,7 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            Choisissez le plan qui vous correspond
+            {`Démarrez gratuitement dès aujourd'hui. Aucune carte bancaire requise.`}
           </motion.p>
 
           <div className='grid gap-6 sm:grid-cols-1 lg:grid-cols-1 mt-8'>
@@ -334,16 +341,9 @@ export default function LandingPage() {
                           : "bg-secondary text-slate-50 hover:bg-secondary/90 cursor-pointer"
                       }`}
                       asChild
-                      // onClick={() => {
-                      //   if (plan.featured) {
-                      //     window.location.href = "/accueil"
-                      //   } else {
-                      //     window.location.href = "/accueil"
-                      //   }
-                      // }}
                     >
                       <Link href='/accueil'>
-                        {plan.featured ? "Commencer" : "Essayer"}
+                        {plan.featured ? "Créer mon Compte Gratuit" : "Essayer"}
                       </Link>
                     </Button>
                   </CardContent>
