@@ -12,9 +12,9 @@ export function Logo() {
           height={30}
           className='rounded-2xl mr-2'
         />
-        <p className='text-xl md:text-3xl italic font-bold text-primary text-center md:text-left'>
+        {/* <p className='text-xl md:text-3xl italic font-bold text-primary text-center md:text-left'>
           CleverDocs
-        </p>
+        </p> */}
       </Link>
     </>
   )

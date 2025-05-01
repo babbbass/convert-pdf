@@ -8,13 +8,10 @@ import { Dropdown } from "./Dropdown"
 export function HeaderLanding({ className }: Readonly<{ className?: string }>) {
   return (
     <header
-      className={`flex max-w-6xl mx-auto border-b items-center justify-between md:text-2xl min-h-20 w-full p-2 px-4 sticky top-0 mb-10 md:mb-20 gap-4 border-slate-200 bg-slate-50 ${className}`}
+      className={`flex max-w-6xl mx-auto items-center justify-between md:text-2xl min-h-16 w-full p-1 px-4 sticky top-0 mb-2 md:mb-20 gap-4 border-slate-200 bg-slate-50 ${className}`}
     >
       <section className='flex flex-col gap-1'>
         <Logo />
-        <p className='text-sm text-secondary font-medium italic'>
-          Gestion intelligente des documents
-        </p>
       </section>
       <section className='flex gap-2'>
         <div className='hidden md:flex gap-2'>

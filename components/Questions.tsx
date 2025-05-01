@@ -9,7 +9,7 @@ export function Questions() {
   return (
     <div
       id='faq'
-      className='flex flex-col items-center justify-center px-4 md:px-6 py-12 md:py-16 max-w-4xl mx-auto w-full'
+      className='flex flex-col items-center justify-center px-4 md:px-6 py-2 md:py-16 max-w-4xl mx-auto w-full'
     >
       <h3 className='text-2xl md:text-4xl font-bold tracking-tight text-primary mb-6 md:mb-8 text-center'>
         Vos Questions, Nos Réponses

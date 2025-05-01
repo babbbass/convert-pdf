@@ -235,7 +235,7 @@ export default function Home() {
 
   return (
     <div className='px-4 pb-2 flex-1'>
-      <div className='max-w-4xl mx-auto space-y-8 mb-12'>
+      <div className='max-w-4xl mx-auto space-y-8 mb-4'>
         <div className='text-base md:text-lg text-left space-y-1'>
           <div className='flex flex-col gap-1'>
             <h1 className='flex flex-col gap-3 text-2xl md:text-4xl font-bold tracking-tight text-primary'>

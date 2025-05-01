@@ -34,31 +34,29 @@ export function Dropdown({ landing }: { landing?: boolean }) {
     <div className='relative'>
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className='bg-primary border-0 text-slate-50 text-sm font-medium  hover:cursor-pointer transition-all duration-300 rounded-2xl relative z-50'
+        className='bg-transparent border-2 border-slate-300 text-secondary hover:cursor-pointer transition-all duration-300 rounded-full relative z-50 hover:bg-transparent p-0 w-8 h-8'
       >
-        {isOpen ? (
-          <X className='h-10 w-10' />
-        ) : (
-          <MenuIcon className='h-10 w-10' />
-        )}
+        {isOpen ? <X className='' /> : <MenuIcon className='' />}
       </Button>
 
       <div
-        className={`absolute right-0 -top-10 mt-2 w-screen rounded-md shadow-lg bg-slate-50 ring-1 ring-gray-100 min-h-screen h-full p-4 py-28 ring-opacity-5 transform transition-all duration-300 ease-in-out ${
+        className={`absolute right-0 -top-10 mt-2 w-screen rounded-md shadow-lg bg-slate-50 ring-1 ring-gray-100 min-h-screen h-full p-4 py-28 ring-opacity-5 transform transition-all duration-500 ease-in-out ${
           isOpen
             ? "translate-x-[calc(0%+14px)]"
             : "translate-x-[calc(100%+18px)]"
         }`}
       >
         <section className='flex flex-col gap-2 items-center'>
-          <div onClick={() => setIsOpen(false)}>
+          <div
+            onClick={() => setIsOpen(false)}
+            className='flex flex-col gap-1 items-start justify-start w-5/6 p-2'
+          >
             {" "}
             <Logo />{" "}
             <p className='text-sm text-secondary font-medium italic mt-2'>
               Gestion intelligente des documents
             </p>
           </div>
-          <p className='w-5/6 text-primary text-lg font-medium text-center mt-4 border-b pb-2 border-slate-200'></p>
           <div className='flex flex-col gap-5 mt-2 items-start w-5/6 px-2 py-4 text-primary'>
             {!landing && (
               <>
@@ -92,13 +90,15 @@ export function Dropdown({ landing }: { landing?: boolean }) {
             )}
 
             <SignedOut>
-              <Link
+              {/* <Link
                 href={"/contact"}
                 className='flex items-center'
                 onClick={() => setIsOpen(false)}
               >
-                <Mail className='mr-2 h-4 w-4 text-secondary' /> Nous contacter
-              </Link>
+                <Button className='inline-flex md:hidden bg-slate-100 border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
+                  Nous contacter
+                </Button>
+              </Link> */}
               <Link href={"/sign-in"}>
                 <Button className='inline-flex md:hidden bg-slate-100 border-0 text-secondary text-sm font-medium hover:bg-secondary hover:text-slate-50 hover:cursor-pointer transition-all duration-300 rounded-2xl'>
                   Connexion <ChevronRight className='ml-0 h-4 w-4' />

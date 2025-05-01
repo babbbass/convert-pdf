@@ -15,7 +15,6 @@ import { useGlobalStore } from "@/stores/globalStore"
 import Image from "next/image"
 import { LandingEmailTrigger } from "@/components/LandingEmailTrigger"
 import { GeneratePdfButton } from "@/components/buttons/GeneratePdfButton"
-import { Separator } from "@/components/ui/separator"
 import { HeaderLanding } from "@/components/HeaderLanding"
 import { useAuth } from "@clerk/nextjs"
 
@@ -152,7 +151,7 @@ export default function LandingPage() {
   }
   return (
     <main className='flex flex-col min-h-screen text-gray-800 pt-0 sm:pb-12 bg-secondary overflow-x-hidden'>
-      <section className='mb-0 bg-slate-50 z-50'>
+      <section className='bg-slate-50 z-50 p-0'>
         <HeaderLanding />
       </section>
       {/* Hero Section */}
@@ -218,7 +217,7 @@ export default function LandingPage() {
       </section>
 
       {/* Test Section */}
-      <section className='mt-10 p-10 md:p-20 bg-slate-50'>
+      <section className='mt-10  p-10 md:p-20 bg-slate-50 pb-14 '>
         <div className='flex gap-6 flex-col max-w-6xl mx-auto w-full'>
           {!isSended && (
             <>
@@ -272,8 +271,6 @@ export default function LandingPage() {
           )}
         </div>
       </section>
-      <Separator className='bg-gray-300 w-3/4 mx-auto px-4' />
-
       <section className='px-4 bg-slate-50 mt-0'>
         <Questions />
       </section>
