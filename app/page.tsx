@@ -42,7 +42,7 @@ const PRICING_PLANS = [
     price: "0€",
     features: [
       "100 documents stockés / mois",
-      "Conversion Image/Scan en PDF",
+      "Conversion Image / Scan en PDF",
       "Tri Automatique (Factures / Notes de frais)",
       "Stockage Sécurisé de vos documents",
       "Envoi facile par email",
