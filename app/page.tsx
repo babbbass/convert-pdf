@@ -155,8 +155,12 @@ export default function LandingPage() {
         <HeaderLanding />
       </section>
       {/* Hero Section */}
-      <section className="w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110">
+      <section
+        className="w-full text-center space-y-6 bg-slate-50 px-3 pt-6 md:pt-16 relative after:content-[''] after:absolute after:-bottom-8 after:left-0 after:right-0 after:h-16 after:bg-slate-50 after:rounded-[50%] after:scale-x-110"
+        aria-labelledby='main-heading'
+      >
         <motion.h1
+          id='main-heading'
           className='text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl text-primary italic'
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -166,6 +170,7 @@ export default function LandingPage() {
         </motion.h1>
 
         <motion.p
+          aria-live='polite' // dynamic change
           className='text-base text-primary md:text-xl max-w-3xl mx-auto text-left'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -180,10 +185,11 @@ export default function LandingPage() {
           transition={{ delay: 0.4, duration: 0.6 }}
         >
           <Button
+            aria-label='Tester gratuitement maintenant sans carte bancaire'
             size='lg'
             className='text-base rounded-2xl hover:shadow-xl transition-shadow bg-secondary text-card-foreground hover:bg-secondary/90 cursor-pointer relative z-10'
           >
-            <Link href={"/accueil"}>
+            <Link href={"/accueil"} passHref legacyBehavior>
               Tester Gratuitement Maintenant (Sans CB)
             </Link>
           </Button>
@@ -192,22 +198,38 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <section className='mt-16 sm:mt-20 lg:mt-24 md:py-10'>
+        <h2 id='features-heading' className='sr-only'>
+          Fonctionnalités principales
+        </h2>
         <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+          <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3' role='list'>
             {FEATURES.map((feature, index) => (
               <motion.div
-                key={index}
+                key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index, duration: 0.5 }}
+                role='listitem'
               >
                 <Card className='h-full rounded-2xl shadow-sm hover:shadow-md transition-shadow bg-slate-50'>
                   <CardContent className='p-6'>
-                    <CheckCircle className='text-green-700 mb-4' size={32} />
-                    <h3 className='text-xl font-semibold mb-2 text-primary'>
+                    <CheckCircle
+                      className='text-green-700 mb-4'
+                      size={32}
+                      aria-hidden='true'
+                    />
+                    <h3
+                      className='text-xl font-semibold mb-2 text-primary'
+                      id={`feature-title-${index}`}
+                    >
                       {feature.title}
                     </h3>
-                    <p className='text-gray-600'>{feature.description}</p>
+                    <p
+                      aria-describedby={`feature-title-${index}`}
+                      className='text-gray-600'
+                    >
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -217,11 +239,17 @@ export default function LandingPage() {
       </section>
 
       {/* Test Section */}
-      <section className='mt-10  p-10 md:p-20 bg-slate-50 pb-14 '>
+      <section
+        className='mt-10  p-10 md:p-20 bg-slate-50 pb-14 '
+        aria-live='polite'
+      >
         <div className='flex gap-6 flex-col max-w-6xl mx-auto w-full'>
           {!isSended && (
             <>
-              <h2 className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center italic'>
+              <h2
+                className='text-xl font-bold tracking-tight sm:text-2xl md:text-3xl text-primary text-center italic'
+                id='upload-section-heading'
+              >
                 Voyez la Magie Opérer : Testez Sans Compte Requis ! 👇
               </h2>
               <ImageUploader onImagesSelected={handleImagesSelected} />
@@ -229,6 +257,7 @@ export default function LandingPage() {
                 images={images}
                 onReorder={handleReorder}
                 onRemove={handleRemove}
+                aria-label='Liste des images téléchargées'
               />
               {images.length > 0 && (
                 <div className='flex justify-center'>
@@ -236,6 +265,7 @@ export default function LandingPage() {
                     images={images}
                     isGenerated={setIsGenerated}
                     setImages={setImages}
+                    aria-label='Générer le PDF'
                   />
                 </div>
               )}
@@ -243,20 +273,30 @@ export default function LandingPage() {
           )}
 
           {isGenerated && (
-            <div className='flex flex-col gap-4 items-center justify-center'>
-              <h3 className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'>
-                Votre PDF est prêt :
+            <div
+              className='flex flex-col gap-4 items-center justify-center'
+              role='alert'
+            >
+              <h3
+                className='flex flex-col md:flex-row gap-2 items-center justify-center text-lg md:text-2xl font-medium tracking-tight text-primary mb-4 italic'
+                id='pdf-reading-heading'
+              >
+                <span>Votre PDF est prêt :</span>
                 <Image
                   src='/pdf.png'
                   width={40}
                   height={40}
                   alt='mes documents'
+                  aria-hidden='true'
                 />
-                {document?.name}
+                <span>{document?.name}</span>
               </h3>
               <div className='flex flex-col gap-4 items-center justify-center'>
                 {isSended ? (
-                  <h2 className='text-lg font-bold tracking-tight sm:text-2xl md:text-3xl text-secondary text-center'>
+                  <h2
+                    className='text-lg font-bold tracking-tight sm:text-2xl md:text-3xl text-secondary text-center'
+                    aria-live='assertive'
+                  >
                     Parfait ! Votre document PDF de test a été envoyé avec
                     succès.
                   </h2>
@@ -264,6 +304,7 @@ export default function LandingPage() {
                   <LandingEmailTrigger
                     setIsSended={setIsSended}
                     isSended={isSended}
+                    aria-labelledby='pdf-reading-heading'
                   />
                 )}
               </div>
@@ -276,9 +317,13 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className='my-10 px-4 md:py-10 '>
+      <section
+        className='my-10 px-4 md:py-10 bg-secondary'
+        aria-labelledby='pricing-heading'
+      >
         <div className='max-w-5xl mx-auto text-center space-y-4'>
           <motion.h2
+            id='pricing-heading'
             className='text-3xl font-bold tracking-tight sm:text-4xl text-slate-50'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -288,43 +333,58 @@ export default function LandingPage() {
           </motion.h2>
 
           <motion.p
-            className='text-slate-100 max-w-2xl mx-auto'
+            className='text-slate-200 max-w-2xl mx-auto' // Changé à slate-200 pour meilleur contraste
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
+            aria-describedby='pricing-heading'
           >
             {`Démarrez gratuitement dès aujourd'hui. Aucune carte bancaire requise.`}
           </motion.p>
 
-          <div className='grid gap-6 sm:grid-cols-1 lg:grid-cols-1 mt-8'>
+          <div
+            className='grid gap-6 sm:grid-cols-1 lg:grid-cols-1 mt-8'
+            role='list'
+          >
             {PRICING_PLANS.map((plan, index) => (
               <motion.div
-                key={index}
+                key={`plan-${plan.name}`} // Meilleure clé unique
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index, duration: 0.5 }}
+                role='listitem'
               >
                 <Card
                   className={`h-full rounded-2xl cursor-pointer bg-slate-50 text-primary md:w-1/2 mx-auto ${
                     plan.featured ? "ring-2 ring-primary" : ""
                   }`}
-                  onClick={() => {
-                    router.push("/accueil")
-                  }}
+                  onClick={() => router.push("/accueil")}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && router.push("/accueil")
+                  } // Navigation clavier
+                  tabIndex={0} // Rendre la carte focusable
+                  aria-label={`Option ${plan.name} - ${plan.price}`}
                 >
                   <CardHeader>
                     <CardTitle className='text-2xl font-bold'>
                       {plan.name}
                     </CardTitle>
-                    <p className='text-xl text-green-700'>{plan.price}</p>
+                    <p className='text-xl text-green-700' aria-hidden='true'>
+                      {plan.price}
+                    </p>
+                    <span className='sr-only'>Prix: {plan.price}</span>
                   </CardHeader>
                   <CardContent>
-                    <ul className='space-y-3'>
+                    <ul className='space-y-3' role='list'>
                       {plan.features.map((feature, i) => (
-                        <li key={i} className='flex items-start gap-3'>
+                        <li
+                          key={`feature-${i}`}
+                          className='flex items-start gap-3'
+                        >
                           <CheckCircle
                             className='text-green-700 mt-0.5 flex-shrink-0'
                             size={18}
+                            aria-hidden='true'
                           />
                           <span>{feature}</span>
                         </li>
@@ -334,10 +394,15 @@ export default function LandingPage() {
                       size='lg'
                       className={`w-full mt-6 ${
                         plan.featured
-                          ? "bg-secondary text-slate-50 hover:bg-secondary/90 cursor-pointer"
-                          : "bg-secondary text-slate-50 hover:bg-secondary/90 cursor-pointer"
+                          ? "bg-secondary text-slate-50 hover:bg-secondary/90"
+                          : "bg-secondary text-slate-50 hover:bg-secondary/90"
                       }`}
                       asChild
+                      aria-label={
+                        plan.featured
+                          ? "Créer un compte gratuit"
+                          : "Essayer gratuitement"
+                      }
                     >
                       <Link href='/accueil'>
                         {plan.featured ? "Créer mon Compte Gratuit" : "Essayer"}
